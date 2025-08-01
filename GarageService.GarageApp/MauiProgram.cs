@@ -2,6 +2,8 @@
 using CommunityToolkit.Maui;
 using GarageService.GarageLib.Services;
 using GarageService.GarageApp.Services;
+using GarageService.GarageApp.Views;
+using GarageService.GarageApp.ViewModels;
 
 namespace GarageService.GarageApp;
 
@@ -19,6 +21,13 @@ public static class MauiProgram
 				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
 			});
 
+        // register view models
+        builder.Services.AddTransient<LoginViewModel>();
+        // Register Views
+        builder.Services.AddTransient<MainPage>();
+        builder.Services.AddTransient<LoginPage>();
+        builder.Services.AddTransient<GarageDashboardPage>();
+        builder.Services.AddTransient<GarageRegistrationPage>();
         // Services
         builder.Services.AddSingleton<ISessionService, SessionService>();
         builder.Services.AddSingleton<ISecureStorage>(SecureStorage.Default);

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -35,7 +36,103 @@ namespace GarageService.GarageLib.Services
                 new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
-        // Add other methods (Put, Delete, etc.) as needed
+        /// <summary>
+        /// login async
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public async Task<LoginResponse> LoginAsync(string username, string password)
+        {
+            try
+            {
+                var loginRequest = new LoginRequest
+                {
+                    Username = username,
+                    Password = password
+                };
+
+                var json = JsonSerializer.Serialize(loginRequest);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _httpClient.PostAsync("Users/login", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    var options = new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    };
+
+                    return JsonSerializer.Deserialize<LoginResponse>(responseContent, options);
+                }
+                else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                {
+                    throw new Exception("Invalid username or password");
+                }
+                else
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"Login failed: {errorContent}");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle or log the exception
+                throw new Exception($"Login error: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// get client profile by user ID
+        /// </summary>
+        /// <param name="userid"></param>
+        /// <returns></returns>
+        public async Task<ApiResponse<GarageProfile>> GetGarageByUserID(int userid)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"GarageProfiles/GetGarageProfileByUserID/{userid}");
+                var content = await response.Content.ReadAsStringAsync();
+
+                if (response.IsSuccessStatusCode)
+                {
+                    // Parse the response content as clientprofile
+                    var garageprofile = await response.Content.ReadFromJsonAsync<GarageProfile>();
+
+                    if (garageprofile == null) // Handle potential null reference
+                    {
+                        return new ApiResponse<GarageProfile>
+                        {
+                            IsSuccess = false,
+                            ErrorMessage = "Garageprofile not found"
+                        };
+                    }
+
+                    return new ApiResponse<GarageProfile> { Data = garageprofile, IsSuccess = true };
+                }
+                else
+                {
+                    return new ApiResponse<GarageProfile>
+                    {
+                        IsSuccess = false,
+                        ErrorMessage = $"Error: {response.StatusCode}"
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<GarageProfile>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = ex.Message
+                };
+            }
+        }
+
+
         /// <summary>
         /// Register users
         /// </summary>
@@ -75,6 +172,90 @@ namespace GarageService.GarageLib.Services
                 return (false, $"An error occurred: {ex.Message}", null);
             }
         }
+
+        /// <summary>
+        /// GarageRegister
+        /// </summary>
+        /// <param name="Garage"></param>
+        /// <returns></returns>
+        public async Task<(bool IsSuccess, string Message, GarageProfile RegisteredUser)> GarageRegister(GarageProfile Garage)
+        {
+            try
+            {
+                var json = JsonSerializer.Serialize(Garage);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _httpClient.PostAsync("GarageProfiles", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    var registeredGarage = JsonSerializer.Deserialize<GarageProfile>(responseContent);
+                    return (true, "Registration successful", registeredGarage);
+                }
+                else if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
+                {
+                    return (false, "Client already exists", null);
+                }
+                else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                {
+                    var errorMessage = await response.Content.ReadAsStringAsync();
+                    return (false, errorMessage, null);
+                }
+                else
+                {
+                    return (false, $"Registration failed: {response.ReasonPhrase}", null);
+                }
+            }
+            catch (Exception ex)
+            {
+                return (false, $"An error occurred: {ex.Message}", null);
+            }
+        }
+
+
+        /// <summary>
+        /// Update Garage Profile 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="clientProfile"></param>
+        /// <returns></returns>
+        public async Task<bool> UpdateGarageProfileAsync(int id, GarageProfile garageProfile)
+        {
+            try
+            {
+                var json = JsonSerializer.Serialize(garageProfile);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _httpClient.PutAsync($"GarageProfiles/{id}", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+
+                    return true;
+                }
+
+                // Handle specific status codes if needed
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    throw new Exception("Client profile not found");
+                }
+                else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                {
+                    throw new Exception("Invalid request - ID mismatch");
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                // Log error or handle it appropriately
+                Console.WriteLine($"Error updating client profile: {ex.Message}");
+                throw;
+            }
+        }
+
+
         /// <summary>
         /// Registers a client profile.
         /// </summary>

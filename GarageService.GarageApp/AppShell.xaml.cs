@@ -1,10 +1,20 @@
-﻿namespace GarageService.GarageApp
+﻿using GarageService.GarageApp.Views;
+
+namespace GarageService.GarageApp
 {
     public partial class AppShell : Shell
     {
         public AppShell()
         {
             InitializeComponent();
+            Routing.RegisterRoute(nameof(LoginPage), typeof(LoginPage));
+            Routing.RegisterRoute("Main", typeof(MainPage));
+            Routing.RegisterRoute(nameof(GarageRegistrationPage), typeof(GarageRegistrationPage));
+            Routing.RegisterRoute(nameof(GarageDashboardPage), typeof(GarageDashboardPage));
+
+
+            // Set initial route
+            CurrentItem = Items[0];
         }
     }
 }
