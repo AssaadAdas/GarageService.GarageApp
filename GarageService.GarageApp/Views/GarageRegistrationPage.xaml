@@ -7,7 +7,7 @@
     <Grid RowDefinitions="Auto,*">
 
         <views:TitleView Title="Create Account"
-             SubmitCommand="{Binding SubmitCommand}"
+             SubmitCommand="{Binding SaveCommand}"
              BackCommand="{Binding GoBack}"
              Grid.Row="0"/>
         <ScrollView Grid.Row="1">
@@ -141,14 +141,7 @@
                                Style="{StaticResource FormEntry}"/>
                     </VerticalStackLayout>
                 </Border>
-                <Button Text="Save" 
-                         Command="{Binding SubmitCommand}" 
-                         BackgroundColor="#3498DB"
-                         TextColor="White"
-                         FontAttributes="Bold"
-                         FontSize="16"
-                         HeightRequest="50"
-                         CornerRadius="25"/>
+              
                 <!-- Login Link -->
                 <StackLayout Orientation="Horizontal" 
                          HorizontalOptions="Center"

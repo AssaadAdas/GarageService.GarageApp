@@ -10,13 +10,29 @@ using System.Windows.Input;
 
 namespace GarageService.GarageApp.ViewModels
 {
-    public class GarageRegistrationViewModel : BaseViewModel
+    public class EditGarageViewModel: BaseViewModel
     {
+        private readonly ISessionService _sessionService;
         private readonly ApiService _ApiService;
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public string ConfirmPassword { get; set; }
-        public int UserTypeid { get; set; } = 1;
+        private GarageProfile _garageProfile;
+        public GarageProfile GarageProfile
+        {
+            get => _garageProfile;
+            set
+            {
+                if (_garageProfile != value)
+                {
+                    _garageProfile = value;
+                    OnPropertyChanged(nameof(GarageProfile));
+                }
+            }
+        }
+
+        public ICommand SaveCommand { get; }
+        public ICommand LoadCommand { get; }
+        public ICommand LoadCountriesCommand { get; }
+        public ICommand BackCommand { get; }
+
         public string GarageName { get; set; }
         public string Address { get; set; }
         private int _selectedCountryId;
@@ -30,7 +46,7 @@ namespace GarageService.GarageApp.ViewModels
                 SelectedCountry = Countries?.FirstOrDefault(c => c.Id == value);
             }
         }
-       
+
         private string _phoneExt;
         public string PhoneExt
         {
@@ -40,7 +56,8 @@ namespace GarageService.GarageApp.ViewModels
         public int PhoneNumber { get; set; }
         public string Email { get; set; }
         int _SpecializationId;
-        public int SpecializationId {
+        public int SpecializationId
+        {
             get => _SpecializationId;
             set
             {
@@ -84,7 +101,7 @@ namespace GarageService.GarageApp.ViewModels
         public Specialization Selectedspecialization
         {
             get => _selectedspecialization;
-            set 
+            set
             {
                 if (SetProperty(ref _selectedspecialization, value))
                 {
@@ -100,18 +117,17 @@ namespace GarageService.GarageApp.ViewModels
             set => SetProperty(ref _errorMessage, value);
         }
 
-        public ICommand SaveCommand { get; }
-        public ICommand BackCommand { get; }
-
-        public GarageRegistrationViewModel(ApiService apiservice)
+        public EditGarageViewModel(ApiService apiservice)
         {
             _ApiService = apiservice;
             SaveCommand = new Command(async () => await Register());
             BackCommand = new Command(async () => await GoBack());
             LoadCountries();
             LoadSpecializations();
-
+            LoadCommand = new Command(async () => await LoadProfile());
+            LoadCommand.Execute(null);
         }
+
         private async Task GoBack()
         {
             await Shell.Current.GoToAsync($"..");
@@ -166,85 +182,88 @@ namespace GarageService.GarageApp.ViewModels
                 Debug.WriteLine($"Exception: {ex}");
             }
         }
+
+        private int GetCurrentUserId()
+        {
+            // Implement your actual user ID retrieval logic
+            int userId;
+            string userType;
+            int profileId = 1;
+            if (_sessionService.IsLoggedIn)
+            {
+                userId = _sessionService.UserId;
+                userType = _sessionService.UserType.ToString();
+                profileId = _sessionService.ProfileId;
+            }
+            else
+            {
+                // If not logged in, you might want to redirect to login page or throw an exception
+                throw new UnauthorizedAccessException("User is not logged in.");
+            }
+
+            return profileId; // Placeholder
+        }
+        private async Task LoadProfile()
+        {
+            // Get current user ID from your authentication system
+            int GarageId = GetCurrentUserId();
+
+            var response = await _ApiService.GetGarageByID(GarageId);
+            if (response.IsSuccess)
+            {
+                GarageProfile = response.Data;
+                if (GarageProfile != null)
+                {
+                    GarageName = GarageProfile.GarageName;
+                    Email = GarageProfile.Email;
+                    Address = GarageProfile.Address;
+                    PhoneNumber = GarageProfile.PhoneNumber;
+                    CountryId = GarageProfile.CountryId;
+                    PhoneExt = GarageProfile.PhoneExt;
+                    // Set the selected country based on the CountryId
+                    SelectedCountry = Countries?.FirstOrDefault(c => c.Id == CountryId);
+                    SpecializationId= GarageProfile.SpecializationId;
+                    Selectedspecialization = specializations?.FirstOrDefault(c => c.Id == SpecializationId);
+
+                    OnPropertyChanged(nameof(GarageName));
+                    OnPropertyChanged(nameof(Email));
+                    OnPropertyChanged(nameof(PhoneNumber));
+                    OnPropertyChanged(nameof(Address));
+                    OnPropertyChanged(nameof(CountryId));
+                    OnPropertyChanged(nameof(SpecializationId));
+                    OnPropertyChanged(nameof(PhoneExt));
+                    OnPropertyChanged(nameof(SelectedCountry));
+                    OnPropertyChanged(nameof(Selectedspecialization));
+                }
+            }
+        }
+
         private async Task Register()
         {
-            if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password) ||
-                string.IsNullOrWhiteSpace(ConfirmPassword) || string.IsNullOrWhiteSpace(GarageName))
+            if (string.IsNullOrWhiteSpace(GarageName))
             {
                 await Shell.Current.DisplayAlert("Error", "Please fill all required fields", "OK");
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(ConfirmPassword) != string.IsNullOrWhiteSpace(Password))
-            {
-                await Shell.Current.DisplayAlert("Error", "Passwords do not match", "OK");
-                return;
-            }
-            var userTypeResponse = await _ApiService.GetUserType(1); // 2 = client user type
-            if (!userTypeResponse.IsSuccess || userTypeResponse.Data == null)
-            {
-                await Shell.Current.DisplayAlert("Error", userTypeResponse.ErrorMessage ?? "Failed to get user type", "OK");
-                return;
-            }
-            var usertype = userTypeResponse.Data;
-            // Create user
-            var user = new User
-            {
-                Username = Username,
-                Password = Password, // Hash this in production
-                UserTypeid = usertype.Id
-            };
+            // Update garage Profiles
+            GarageProfile.GarageName = GarageName;
+            GarageProfile.Email = Email;
+            GarageProfile.PhoneExt = PhoneExt;
+            GarageProfile.PhoneNumber = PhoneNumber;
+            GarageProfile.CountryId = CountryId;
+            GarageProfile.Address = Address;
+            GarageProfile.SpecializationId = SpecializationId;
+            bool success = await _ApiService.UpdateGarageProfileAsync(GarageProfile.Id, GarageProfile);
 
-            var (isSuccess, message, registeredUser) = await _ApiService.RegisterUserAsync(user);
-            if (!isSuccess)
+            if (success)
             {
-                await Shell.Current.DisplayAlert("Error", message, "OK");
-                return;
-            }
-
-            // Get the user with ID
-            var userAdded = await _ApiService.GetUserByUsername(Username);
-            if (userAdded != null && userAdded.IsSuccess)
-            {
-                user = userAdded.Data; // Extract the User object
+                await Shell.Current.DisplayAlert("Success", "Profile updated successfully", "OK");
+                await Shell.Current.GoToAsync(".."); // This pops the Edit page and returns to the dashboard
             }
             else
             {
-                await Shell.Current.DisplayAlert("Error", userAdded.ErrorMessage, "OK");
-                return;
-            }
-
-            // Create garage Profiles
-            var garageProfile = new GarageProfile
-            {
-                GarageName = GarageName,
-                CountryId = CountryId,
-                PhoneExt = PhoneExt,
-                PhoneNumber = PhoneNumber,
-                Email = Email,
-                Address = Address,
-                SpecializationId = SpecializationId,
-                IsPremium = false,
-                UserId = user.Id,
-                GaragePaymentMethods = null,
-                GaragePaymentOrders = null,
-                Country = null,
-                GaragePremiumRegistrations = null,
-                Specialization =  null,
-                User = null,
-                VehiclesServices =  null
-
-            };
-            var profileAddedResponse = await _ApiService.GarageRegister(garageProfile);
-
-            if (profileAddedResponse.IsSuccess)
-            {
-                await Shell.Current.DisplayAlert("Success", "Registration successful", "OK");
-                await Shell.Current.GoToAsync("//Login");
-            }
-            else
-            {
-                await Shell.Current.DisplayAlert("Error", "Internal error", "OK");
+                await Shell.Current.DisplayAlert("Error", "Failed to update profile", "OK");
             }
         }
     }

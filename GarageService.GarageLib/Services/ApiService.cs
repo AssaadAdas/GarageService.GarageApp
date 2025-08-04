@@ -252,7 +252,7 @@ namespace GarageService.GarageLib.Services
                 // Handle specific status codes if needed
                 if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
-                    throw new Exception("Client profile not found");
+                    throw new Exception("Garage profile not found");
                 }
                 else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
                 {
@@ -264,7 +264,7 @@ namespace GarageService.GarageLib.Services
             catch (Exception ex)
             {
                 // Log error or handle it appropriately
-                Console.WriteLine($"Error updating client profile: {ex.Message}");
+                Console.WriteLine($"Error updating Garage profile: {ex.Message}");
                 throw;
             }
         }
@@ -519,6 +519,53 @@ namespace GarageService.GarageLib.Services
             catch (Exception ex)
             {
                 return new ApiResponse<User>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = ex.Message
+                };
+            }
+        }
+
+        /// <summary>
+        /// Get client by by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<ApiResponse<GarageProfile>> GetGarageByID(int id)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"GarageProfiles/{id}");
+                var content = await response.Content.ReadAsStringAsync();
+
+                if (response.IsSuccessStatusCode)
+                {
+                    // Parse the response content as clientprofile
+                    var garageprofile = await response.Content.ReadFromJsonAsync<GarageProfile>();
+
+                    if (garageprofile == null) // Handle potential null reference
+                    {
+                        return new ApiResponse<GarageProfile>
+                        {
+                            IsSuccess = false,
+                            ErrorMessage = "Garage profile not found"
+                        };
+                    }
+
+                    return new ApiResponse<GarageProfile> { Data = garageprofile, IsSuccess = true };
+                }
+                else
+                {
+                    return new ApiResponse<GarageProfile>
+                    {
+                        IsSuccess = false,
+                        ErrorMessage = $"Error: {response.StatusCode}"
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<GarageProfile>
                 {
                     IsSuccess = false,
                     ErrorMessage = ex.Message
