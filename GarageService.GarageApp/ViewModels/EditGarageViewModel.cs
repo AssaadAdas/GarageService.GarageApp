@@ -117,9 +117,10 @@ namespace GarageService.GarageApp.ViewModels
             set => SetProperty(ref _errorMessage, value);
         }
 
-        public EditGarageViewModel(ApiService apiservice)
+        public EditGarageViewModel(ApiService apiservice, ISessionService sessionService)
         {
             _ApiService = apiservice;
+            _sessionService = sessionService;
             SaveCommand = new Command(async () => await Register());
             BackCommand = new Command(async () => await GoBack());
             LoadCountries();

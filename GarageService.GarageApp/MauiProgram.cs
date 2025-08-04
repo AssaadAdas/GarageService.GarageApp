@@ -24,12 +24,15 @@ public static class MauiProgram
         // register view models
         builder.Services.AddTransient<LoginViewModel>();
         builder.Services.AddTransient<GarageRegistrationViewModel>();
-        
+        builder.Services.AddTransient<EditGarageViewModel>();
+        builder.Services.AddTransient<GarageDashboardViewModel>();
+
         // Register Views
         builder.Services.AddTransient<MainPage>();
         builder.Services.AddTransient<LoginPage>();
         builder.Services.AddTransient<GarageDashboardPage>();
         builder.Services.AddTransient<GarageRegistrationPage>();
+        builder.Services.AddTransient<EditGaragePage>();
         // Services
         builder.Services.AddSingleton<ISessionService, SessionService>();
         builder.Services.AddSingleton<ISecureStorage>(SecureStorage.Default);
