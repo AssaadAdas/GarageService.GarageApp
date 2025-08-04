@@ -12,6 +12,6 @@ namespace GarageService.GarageLib.Models
 
         public string SpecializationDesc { get; set; } = null!;
 
-        public virtual ICollection<GarageProfile> GarageProfiles { get; set; } = new List<GarageProfile>();
+        public virtual ICollection<GarageProfile>? GarageProfiles { get; set; } = new List<GarageProfile>();
     }
 }

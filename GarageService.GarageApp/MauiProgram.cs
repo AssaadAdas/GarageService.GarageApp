@@ -23,6 +23,8 @@ public static class MauiProgram
 
         // register view models
         builder.Services.AddTransient<LoginViewModel>();
+        builder.Services.AddTransient<GarageRegistrationViewModel>();
+        
         // Register Views
         builder.Services.AddTransient<MainPage>();
         builder.Services.AddTransient<LoginPage>();

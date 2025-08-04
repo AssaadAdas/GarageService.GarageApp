@@ -1,32 +1,36 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<FlexLayout xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+<FlexLayout  xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="GarageService.GarageApp.Views.TitleView"
-             >
+             BackgroundColor="{AppThemeBinding Light=#EFF6FF, Dark=#1E3A8A}"
+             JustifyContent="SpaceBetween"
+             AlignItems="Center"
+             Padding="20,0"
+             HeightRequest="60">
     <!-- Back Button -->
     <Button x:Name="BackButton"
-         Text="←"
-         Command="{Binding BackCommand}"
-         BackgroundColor="Transparent"
-         TextColor="Black"
-         FontSize="24"
-         Margin="0,0,10,0"
-         HorizontalOptions="Center"
-         VerticalOptions="Center"/>
+            Text="←"
+            Command="{Binding BackCommand}"
+            BackgroundColor="Transparent"
+            TextColor="Black"
+            FontSize="24"
+            Margin="0,0,10,0"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"/>
     <Label x:Name="TitleLabel"
-        Text="{Binding Title}"
-        FontSize="24"
-        FontAttributes="Bold"
-        TextColor="Black"
-        HorizontalOptions="Center"
-        VerticalOptions="Center"/>
+           Text="{Binding Title}"
+           FontSize="24"
+           FontAttributes="Bold"
+           TextColor="Black"
+           HorizontalOptions="Center"
+           VerticalOptions="Center"/>
 
     <Button x:Name="SaveButton"
-         Text="✓"
-         Command="{Binding SaveCommand}"
-         BackgroundColor="Transparent"
-         TextColor="Black"
-         FontSize="24"
-         HorizontalOptions="Center"
-         VerticalOptions="Center"/>
+            Text="✓"
+            Command="{Binding SaveCommand}"
+            BackgroundColor="Transparent"
+            TextColor="Black"
+            FontSize="24"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"/>
 </FlexLayout>

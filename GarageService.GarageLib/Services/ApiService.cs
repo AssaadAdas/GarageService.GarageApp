@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
@@ -178,38 +179,51 @@ namespace GarageService.GarageLib.Services
         /// </summary>
         /// <param name="Garage"></param>
         /// <returns></returns>
-        public async Task<(bool IsSuccess, string Message, GarageProfile RegisteredUser)> GarageRegister(GarageProfile Garage)
+        public async Task<ApiResponse<GarageProfile>> GarageRegister(GarageProfile Garage)
         {
             try
             {
+                //var json = JsonSerializer.Serialize(Garage);
+                //var content = new StringContent(json, Encoding.UTF8, "application/json");
                 var json = JsonSerializer.Serialize(Garage);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
-
                 var response = await _httpClient.PostAsync("GarageProfiles", content);
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var responseContent = await response.Content.ReadAsStringAsync();
-                    var registeredGarage = JsonSerializer.Deserialize<GarageProfile>(responseContent);
-                    return (true, "Registration successful", registeredGarage);
-                }
-                else if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
-                {
-                    return (false, "Client already exists", null);
-                }
-                else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
-                {
-                    var errorMessage = await response.Content.ReadAsStringAsync();
-                    return (false, errorMessage, null);
+                    var garageProfile = await response.Content.ReadFromJsonAsync<GarageProfile>();
+                    return new ApiResponse<GarageProfile>
+                    {
+                        IsSuccess = true,
+                        Data = garageProfile,
+                    };
+                   
                 }
                 else
                 {
-                    return (false, $"Registration failed: {response.ReasonPhrase}", null);
+
+                    var errorContent = await response.Content.ReadAsStringAsync();
+
+                    // Handle different status codes
+                    if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                    {
+                        throw new Exception($"Validation error: {errorContent}");
+                    }
+                    else if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
+                    {
+                        throw new Exception($"Conflict: {errorContent}");
+                    }
+                    else
+                    {
+                        throw new Exception($"API error: {response.StatusCode} - {errorContent}");
+                    }
                 }
             }
             catch (Exception ex)
             {
-                return (false, $"An error occurred: {ex.Message}", null);
+                // Log or handle the exception
+                Console.WriteLine($"Error adding vehicle: {ex.Message}");
+                throw;
             }
         }
 
@@ -340,6 +354,178 @@ namespace GarageService.GarageLib.Services
                 throw;
             }
         }
+
+        /// <summary>
+        /// Get all countries as list
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ApiResponse<List<Country>>> GetCountriesAsync()
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync("Countries");
+                var content = await response.Content.ReadAsStringAsync();
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var countries = await response.Content.ReadFromJsonAsync<List<Country>>();
+                    //var countries = JsonSerializer.Deserialize<List<Country>>(content);
+                    return new ApiResponse<List<Country>>
+                    {
+                        IsSuccess = true,
+                        Data = countries.OrderBy(c => c.CountryName).ToList(),
+                    };
+                }
+                else
+                {
+                    return new ApiResponse<List<Country>>
+                    {
+                        IsSuccess = false,
+                        ErrorMessage = $"Error: {response.StatusCode} - {content}",
+
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<List<Country>>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = ex.Message,
+
+                };
+            }
+        }
+
+        /// <summary>
+        /// Get all countries as list
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ApiResponse<List<Specialization>>> GetSpecializationsAsync()
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync("Specializations");
+                var content = await response.Content.ReadAsStringAsync();
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var specializations = await response.Content.ReadFromJsonAsync<List<Specialization>>();
+                    //var countries = JsonSerializer.Deserialize<List<Country>>(content);
+                    return new ApiResponse<List<Specialization>>
+                    {
+                        IsSuccess = true,
+                        Data = specializations.OrderBy(c => c.SpecializationDesc).ToList(),
+                    };
+                }
+                else
+                {
+                    return new ApiResponse<List<Specialization>>
+                    {
+                        IsSuccess = false,
+                        ErrorMessage = $"Error: {response.StatusCode} - {content}",
+
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<List<Specialization>>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = ex.Message,
+
+                };
+            }
+        }
+
+        /// <summary>
+        /// Fetches a user type by its ID.
+        /// </summary>
+        /// <param name="Typeid"></param>
+        /// <returns></returns>
+        public async Task<ApiResponse<UserType>> GetUserType(int Typeid)
+        {
+            try
+            {
+                // Call the API endpoint
+
+                using var response = await _httpClient.GetAsync($"UserTypes/{Typeid}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var userType = await response.Content.ReadFromJsonAsync<UserType>();
+                    return new ApiResponse<UserType> { Data = userType, IsSuccess = true };
+                }
+
+                // Handle non-success status codes
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                return response.StatusCode switch
+                {
+                    HttpStatusCode.NotFound =>
+                        new ApiResponse<UserType> { ErrorMessage = "User type not found", IsSuccess = false },
+                    _ =>
+                        new ApiResponse<UserType> { ErrorMessage = $"Error fetching user type: {response.ReasonPhrase}", IsSuccess = false }
+                };
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions (network issues, etc.)
+                return new ApiResponse<UserType>
+                {
+                    ErrorMessage = $"An error occurred while fetching user type: {ex.Message}",
+                    IsSuccess = false
+                };
+            }
+        }
+
+        /// <summary>
+        /// get user by user name
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        public async Task<ApiResponse<User>> GetUserByUsername(string username)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"Users/GetUserByUserName/{username}");
+                var content = await response.Content.ReadAsStringAsync();
+
+                if (response.IsSuccessStatusCode)
+                {
+                    // Parse the response content as User
+                    var user = await response.Content.ReadFromJsonAsync<User>();
+
+                    if (user == null) // Handle potential null reference
+                    {
+                        return new ApiResponse<User>
+                        {
+                            IsSuccess = false,
+                            ErrorMessage = "User not found"
+                        };
+                    }
+
+                    return new ApiResponse<User> { Data = user, IsSuccess = true };
+                }
+                else
+                {
+                    return new ApiResponse<User>
+                    {
+                        IsSuccess = false,
+                        ErrorMessage = $"Error: {response.StatusCode}"
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<User>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = ex.Message
+                };
+            }
+        }
+
     }
     public class ApiResponse<T>
     {

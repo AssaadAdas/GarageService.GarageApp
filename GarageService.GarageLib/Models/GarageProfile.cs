@@ -28,18 +28,18 @@ namespace GarageService.GarageLib.Models
 
         public bool IsPremium { get; set; }
 
-        public virtual Country Country { get; set; } = null!;
+        public virtual Country? Country { get; set; } = null!;
 
-        public virtual ICollection<GaragePaymentMethod> GaragePaymentMethods { get; set; } = new List<GaragePaymentMethod>();
+        public virtual ICollection<GaragePaymentMethod>? GaragePaymentMethods { get; set; } = new List<GaragePaymentMethod>();
 
-        public virtual ICollection<GaragePaymentOrder> GaragePaymentOrders { get; set; } = new List<GaragePaymentOrder>();
+        public virtual ICollection<GaragePaymentOrder>? GaragePaymentOrders { get; set; } = new List<GaragePaymentOrder>();
 
-        public virtual ICollection<GaragePremiumRegistration> GaragePremiumRegistrations { get; set; } = new List<GaragePremiumRegistration>();
+        public virtual ICollection<GaragePremiumRegistration>? GaragePremiumRegistrations { get; set; } = new List<GaragePremiumRegistration>();
 
-        public virtual Specialization Specialization { get; set; } = null!;
+        public virtual Specialization? Specialization { get; set; } = null!;
 
-        public virtual User User { get; set; } = null!;
+        public virtual User? User { get; set; } = null!;
 
-        public virtual ICollection<VehiclesService> VehiclesServices { get; set; } = new List<VehiclesService>();
+        public virtual ICollection<VehiclesService>? VehiclesServices { get; set; } = new List<VehiclesService>();
     }
 }

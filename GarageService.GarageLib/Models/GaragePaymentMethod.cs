@@ -32,6 +32,6 @@ namespace GarageService.GarageLib.Models
 
         public string Cvv { get; set; } = null!;
 
-        public virtual GarageProfile Garage { get; set; } = null!;
+        public virtual GarageProfile? Garage { get; set; } = null!;
     }
 }

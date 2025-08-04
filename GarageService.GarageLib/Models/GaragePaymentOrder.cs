@@ -28,13 +28,13 @@ namespace GarageService.GarageLib.Models
 
         public int PremiumOfferid { get; set; }
 
-        public virtual Currency Curr { get; set; } = null!;
+        public virtual Currency? Curr { get; set; } = null!;
 
-        public virtual GarageProfile Garage { get; set; } = null!;
+        public virtual GarageProfile? Garage { get; set; } = null!;
 
-        public virtual GaragePaymentMethod PaymentMethod { get; set; } = null!;
+        public virtual GaragePaymentMethod? PaymentMethod { get; set; } = null!;
 
-        public virtual PremiumOffer PremiumOffer { get; set; } = null!;
+        public virtual PremiumOffer? PremiumOffer { get; set; } = null!;
     }
 
 }
