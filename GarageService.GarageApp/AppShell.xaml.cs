@@ -12,6 +12,7 @@ namespace GarageService.GarageApp
             Routing.RegisterRoute(nameof(GarageRegistrationPage), typeof(GarageRegistrationPage));
             Routing.RegisterRoute(nameof(GarageDashboardPage), typeof(GarageDashboardPage));
             Routing.RegisterRoute(nameof(EditGaragePage), typeof(EditGaragePage));
+            Routing.RegisterRoute(nameof(PremuimPage), typeof(PremuimPage));
 
 
             // Set initial route

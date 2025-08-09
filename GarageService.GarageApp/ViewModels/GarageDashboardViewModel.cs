@@ -15,6 +15,7 @@ namespace GarageService.GarageApp.ViewModels
         private readonly ApiService _ApiService;
         private readonly ISessionService _sessionService;
         public ICommand EditProfileCommand { get; }
+        public ICommand PremuimCommand { get; }
         private GarageProfile _garageProfile;
         public GarageProfile GarageProfile
         {
@@ -36,7 +37,7 @@ namespace GarageService.GarageApp.ViewModels
             //_navigationService = navigationService;
             //OpenHistoryCommand = new Command(OpenHistory);
             //AddVehicleCommand = new Command(async () => await AddVehicle());
-            //PremuimCommand = new Command(async () => await LoadPremuim());
+            PremuimCommand = new Command(async () => await LoadPremuim());
             //LogOutCommand = new Command(async () => await LogOut());
             //EditVehicleCommand = new Command<Vehicle>(async (vehicle) => await EditVehicle(vehicle));
             //ShowPopUpCommand = new Command<Vehicle>(async (vehicle) => await ShowMenu(vehicle));
@@ -46,6 +47,11 @@ namespace GarageService.GarageApp.ViewModels
             //ReadNoteCommand = new Command<ClientNotification>(async (clientnotification) => await ReadNote(clientnotification));
             //// Load data here
             LoadGarageProfile();
+        }
+
+        private async Task LoadPremuim()
+        {
+            await Shell.Current.GoToAsync($"{nameof(PremuimPage)}");
         }
         private async Task EditProfile()
         {
