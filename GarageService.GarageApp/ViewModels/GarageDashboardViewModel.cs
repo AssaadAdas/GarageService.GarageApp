@@ -3,6 +3,7 @@ using GarageService.GarageLib.Models;
 using GarageService.GarageLib.Services;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +16,8 @@ namespace GarageService.GarageApp.ViewModels
         private readonly ApiService _ApiService;
         private readonly ISessionService _sessionService;
         public ICommand EditProfileCommand { get; }
+        public ICommand AddVehicleCommand { get; }
+        public ICommand SearchVehicleCommand { get; }
         public ICommand PremuimCommand { get; }
         private GarageProfile _garageProfile;
         public GarageProfile GarageProfile
@@ -29,6 +32,27 @@ namespace GarageService.GarageApp.ViewModels
                 }
             }
         }
+
+        private ObservableCollection<Vehicle> _vehicles = new();
+        public ObservableCollection<Vehicle> Vehicles
+        {
+            get => _vehicles;
+            set
+            {
+                if (_vehicles != value)
+                {
+                    _vehicles = value;
+                    OnPropertyChanged(nameof(Vehicles));
+                }
+            }
+        }
+
+        private string _liscencePlate;
+        public string LiscencePlate
+        {
+            get => _liscencePlate;
+            set => SetProperty(ref _liscencePlate, value);
+        }
         public GarageDashboardViewModel(ApiService apiservice, ISessionService sessionService)
         {
             // Initialize properties and commands
@@ -41,7 +65,7 @@ namespace GarageService.GarageApp.ViewModels
             //LogOutCommand = new Command(async () => await LogOut());
             //EditVehicleCommand = new Command<Vehicle>(async (vehicle) => await EditVehicle(vehicle));
             //ShowPopUpCommand = new Command<Vehicle>(async (vehicle) => await ShowMenu(vehicle));
-            //AddServicesCommand = new Command<Vehicle>(async (vehicle) => await AddServices(vehicle));
+            SearchVehicleCommand = new Command(async () => await SearchVehicleAsync());
             //AddAppointmentCommand = new Command(AddAppointment);
             EditProfileCommand = new Command(async () => await EditProfile());
             //ReadNoteCommand = new Command<ClientNotification>(async (clientnotification) => await ReadNote(clientnotification));
@@ -52,6 +76,19 @@ namespace GarageService.GarageApp.ViewModels
         private async Task LoadPremuim()
         {
             await Shell.Current.GoToAsync($"{nameof(PremuimPage)}");
+        }
+        private async Task SearchVehicleAsync()
+        {
+            // Get current user ID from your authentication system
+            if (LiscencePlate == string.Empty || LiscencePlate is null)
+                return;
+
+            var response = await _ApiService.GetVehicleByLiscenceID(LiscencePlate);
+            if (response.IsSuccess)
+            {
+                Vehicles.Clear();
+                Vehicles.Add(response.Data); // If response.Data is a single Vehicle
+            }
         }
         private async Task EditProfile()
         {

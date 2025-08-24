@@ -134,6 +134,48 @@ namespace GarageService.GarageLib.Services
         }
 
 
+        public async Task<ApiResponse<Vehicle>> GetVehicleByLiscenceID(String LiscencePlate)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"Vehicles/license/{LiscencePlate}");
+                var content = await response.Content.ReadAsStringAsync();
+
+                if (response.IsSuccessStatusCode)
+                {
+                    // Parse the response content as clientprofile
+                    var vehicle = await response.Content.ReadFromJsonAsync<Vehicle>();
+
+                    if (vehicle == null) // Handle potential null reference
+                    {
+                        return new ApiResponse<Vehicle>
+                        {
+                            IsSuccess = false,
+                            ErrorMessage = "Garageprofile not found"
+                        };
+                    }
+
+                    return new ApiResponse<Vehicle> { Data = vehicle, IsSuccess = true };
+                }
+                else
+                {
+                    return new ApiResponse<Vehicle>
+                    {
+                        IsSuccess = false,
+                        ErrorMessage = $"Error: {response.StatusCode}"
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<Vehicle>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = ex.Message
+                };
+            }
+        }
+
         /// <summary>
         /// Register users
         /// </summary>
