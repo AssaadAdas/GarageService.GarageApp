@@ -60,7 +60,7 @@ namespace GarageService.GarageApp.ViewModels
             _sessionService = sessionService;
             //_navigationService = navigationService;
             //OpenHistoryCommand = new Command(OpenHistory);
-            //AddVehicleCommand = new Command(async () => await AddVehicle());
+            AddVehicleCommand = new Command(async () => await AddClientVehicle());
             PremuimCommand = new Command(async () => await LoadPremuim());
             //LogOutCommand = new Command(async () => await LogOut());
             //EditVehicleCommand = new Command<Vehicle>(async (vehicle) => await EditVehicle(vehicle));
@@ -90,6 +90,12 @@ namespace GarageService.GarageApp.ViewModels
                 Vehicles.Add(response.Data); // If response.Data is a single Vehicle
             }
         }
+
+        private async Task AddClientVehicle()
+        {
+            await Shell.Current.GoToAsync($"{nameof(RegisterClientVehiclePage)}");
+        }
+
         private async Task EditProfile()
         {
             await Shell.Current.GoToAsync($"{nameof(EditGaragePage)}");

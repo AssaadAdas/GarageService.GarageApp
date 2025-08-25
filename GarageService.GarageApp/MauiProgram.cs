@@ -35,6 +35,7 @@ public static class MauiProgram
         builder.Services.AddTransient<GarageRegistrationPage>();
         builder.Services.AddTransient<EditGaragePage>();
         builder.Services.AddTransient<PremuimPage>();
+        builder.Services.AddTransient<RegisterClientVehiclePage>();
         // Services
         builder.Services.AddSingleton<ISessionService, SessionService>();
         builder.Services.AddSingleton<ISecureStorage>(SecureStorage.Default);
