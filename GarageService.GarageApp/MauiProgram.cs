@@ -27,6 +27,8 @@ public static class MauiProgram
         builder.Services.AddTransient<EditGarageViewModel>();
         builder.Services.AddTransient<GarageDashboardViewModel>();
         builder.Services.AddTransient<PremiumOffersViewModel>();
+        builder.Services.AddTransient<RegisterClientVehicleViewModel>();
+        
 
         // Register Views
         builder.Services.AddTransient<MainPage>();
