@@ -331,7 +331,7 @@ namespace GarageService.GarageApp.ViewModels
                 await Shell.Current.DisplayAlert("Error", "Failed to load vehicle details for notification.", "OK");
                 return;
             }
-            string Notes = $"Your vehicle with Liscence Plate {Vehicle.LiscencePlate} has been checked Out at {DateTime.Now} at Garage {GarageProfile.GarageName} with total cost {TotalServiceCost.ToString()} .";
+            string Notes = $"Your vehicle with Liscence Plate {Vehicle.LiscencePlate} has been checked Out at {DateTime.Now} at Garage {GarageProfile.GarageName} with total cost {TotalServiceCost.ToString()} {Currency} .";
 
             var Nptification = new ClientNotification
             {
