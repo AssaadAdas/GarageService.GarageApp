@@ -41,5 +41,7 @@ namespace GarageService.GarageLib.Models
         public virtual User? User { get; set; } = null!;
 
         public virtual ICollection<VehiclesService>? VehiclesServices { get; set; } = new List<VehiclesService>();
+
+        public virtual ICollection<VehicleCheck>? VehicleChecks { get; set; } = new List<VehicleCheck>();
     }
 }

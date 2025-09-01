@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:views="clr-namespace:GarageService.GarageApp.Views"
              x:Class="GarageService.GarageApp.Views.GarageDashboardPage"
+             x:Name="PageRoot"
              >
     <Grid RowDefinitions="Auto,*">
         <views:DashBoardTitle Title="Client DashBoard"
@@ -219,15 +220,18 @@
                                                                    Spacing="12">
                                                         <!-- Reduced spacing between buttons -->
                                                         <Button Text="🔧" 
+                                                                Command="{Binding BindingContext.AddServicesCommand, Source={x:Reference PageRoot}}"
                                                                 CommandParameter="{Binding .}"
                                                                 BackgroundColor="Transparent"
                                                                 TextColor="{AppThemeBinding Light=#1976D2, Dark=#90CAF9}"
                                                                 FontSize="16"
                                                                 Padding="0"
+                                                                IsEnabled="{Binding IsChecked}"
                                                                 HeightRequest="36"
                                                                 WidthRequest="36"
                                                                 CornerRadius="18"/>
                                                         <Button Text="⚙️" 
+                                                                Command="{Binding BindingContext.CheckVehicleCommand, Source={x:Reference PageRoot}}"
                                                                 CommandParameter="{Binding .}"
                                                                 BackgroundColor="Transparent"
                                                                 TextColor="{AppThemeBinding Light=#1976D2, Dark=#90CAF9}"

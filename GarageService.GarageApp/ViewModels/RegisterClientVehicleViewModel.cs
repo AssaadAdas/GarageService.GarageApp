@@ -10,7 +10,7 @@ using System.Windows.Input;
 
 namespace GarageService.GarageApp.ViewModels
 {
-    class RegisterClientVehicleViewModel : BaseViewModel
+    public class RegisterClientVehicleViewModel : BaseViewModel
     {
         private readonly ApiService _ApiService;
         public string Username { get; set; }

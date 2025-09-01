@@ -15,9 +15,12 @@ namespace GarageService.GarageApp.ViewModels
     {
         private readonly ApiService _ApiService;
         private readonly ISessionService _sessionService;
+        
         public ICommand EditProfileCommand { get; }
         public ICommand AddVehicleCommand { get; }
         public ICommand SearchVehicleCommand { get; }
+        public ICommand AddServicesCommand { get; }
+        public ICommand CheckVehicleCommand { get; }
         public ICommand PremuimCommand { get; }
         private GarageProfile _garageProfile;
         public GarageProfile GarageProfile
@@ -32,7 +35,6 @@ namespace GarageService.GarageApp.ViewModels
                 }
             }
         }
-
         private ObservableCollection<Vehicle> _vehicles = new();
         public ObservableCollection<Vehicle> Vehicles
         {
@@ -43,6 +45,19 @@ namespace GarageService.GarageApp.ViewModels
                 {
                     _vehicles = value;
                     OnPropertyChanged(nameof(Vehicles));
+                }
+            }
+        }
+        private bool _isChecked =  false;
+        public bool IsChecked
+        {
+            get => _isChecked;
+            set
+            {
+                if (_isChecked != value)
+                {
+                    _isChecked = value;
+                    OnPropertyChanged(nameof(IsChecked));
                 }
             }
         }
@@ -58,19 +73,54 @@ namespace GarageService.GarageApp.ViewModels
             // Initialize properties and commands
             _ApiService = apiservice;
             _sessionService = sessionService;
-            //_navigationService = navigationService;
-            //OpenHistoryCommand = new Command(OpenHistory);
-            AddVehicleCommand = new Command(async () => await AddClientVehicle());
             PremuimCommand = new Command(async () => await LoadPremuim());
             //LogOutCommand = new Command(async () => await LogOut());
-            //EditVehicleCommand = new Command<Vehicle>(async (vehicle) => await EditVehicle(vehicle));
-            //ShowPopUpCommand = new Command<Vehicle>(async (vehicle) => await ShowMenu(vehicle));
+            AddServicesCommand = new Command<Vehicle>(async (vehicle) => await AddServices(vehicle));
+            CheckVehicleCommand = new Command<Vehicle>(async (vehicle) => await CheckVehicle(vehicle));
             SearchVehicleCommand = new Command(async () => await SearchVehicleAsync());
-            //AddAppointmentCommand = new Command(AddAppointment);
             EditProfileCommand = new Command(async () => await EditProfile());
-            //ReadNoteCommand = new Command<ClientNotification>(async (clientnotification) => await ReadNote(clientnotification));
-            //// Load data here
+            
             LoadGarageProfile();
+        }
+        private async Task AddServices(Vehicle vehicle)
+        {
+            await Shell.Current.GoToAsync($"{nameof(ServicePage)}?vehileid={vehicle.Id}");
+        }
+        private async Task CheckVehicle(Vehicle vehicle)
+        {
+            var CheckVehicle = new VehicleCheck
+            {
+                Vehicleid = vehicle.Id,
+                CheckStatus = "IN",
+                CheckDate = DateTime.Now,
+                GarageId = GarageProfile.Id
+            };
+            var response = await _ApiService.SaveVehicleCheckAsync(CheckVehicle);
+
+            if (response.IsSuccess)
+            {
+                IsChecked = true;
+                WriteClientNotification(vehicle);
+            }
+            else
+            {
+                IsChecked = false;
+            }
+        }
+
+        private async Task WriteClientNotification(Vehicle vehicle)
+        {
+            string Notes = $"Your vehicle with Liscence Plate {vehicle.LiscencePlate} has been checked in at {DateTime.Now} at Garage {GarageProfile.GarageName}.";
+
+            var Nptification = new ClientNotification
+            {
+                
+                Clientid = vehicle.ClientId ,
+                Notes = Notes,
+               
+                IsRead = false
+            };
+            var response = await _ApiService.SaveClientNotificationsAsync(Nptification);
         }
 
         private async Task LoadPremuim()
@@ -91,10 +141,10 @@ namespace GarageService.GarageApp.ViewModels
             }
         }
 
-        private async Task AddClientVehicle()
-        {
-            await Shell.Current.GoToAsync($"{nameof(RegisterClientVehiclePage)}");
-        }
+        //private async Task AddClientVehicle()
+        //{
+        //    await Shell.Current.GoToAsync($"{nameof(RegisterClientVehiclePage)}");
+        //}
 
         private async Task EditProfile()
         {

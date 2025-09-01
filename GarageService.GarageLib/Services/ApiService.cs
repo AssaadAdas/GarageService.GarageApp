@@ -133,7 +133,233 @@ namespace GarageService.GarageLib.Services
             }
         }
 
+        /// <summary>
+        /// get client profile by user ID
+        /// </summary>
+        /// <param name="userid"></param>
+        /// <returns></returns>
+        public async Task<ApiResponse<Vehicle>> GetVehicleByID(int VehicleID)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"Vehicles/{VehicleID}");
+                var content = await response.Content.ReadAsStringAsync();
 
+                if (response.IsSuccessStatusCode)
+                {
+                    // Parse the response content as clientprofile
+                    var VehicleR = await response.Content.ReadFromJsonAsync<Vehicle>();
+
+                    if (VehicleR == null) // Handle potential null reference
+                    {
+                        return new ApiResponse<Vehicle>
+                        {
+                            IsSuccess = false,
+                            ErrorMessage = "Vehicle not found"
+                        };
+                    }
+
+                    return new ApiResponse<Vehicle> { Data = VehicleR, IsSuccess = true };
+                }
+                else
+                {
+                    return new ApiResponse<Vehicle>
+                    {
+                        IsSuccess = false,
+                        ErrorMessage = $"Error: {response.StatusCode}"
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<Vehicle>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = ex.Message
+                };
+            }
+        }
+
+
+        /// <summary>
+        /// GetServiceTypesAsync
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ApiResponse<List<ServiceType>>> GetServiceTypesAsync()
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync("ServiceTypes");
+                var content = await response.Content.ReadAsStringAsync();
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var serviceTypes = await response.Content.ReadFromJsonAsync<List<ServiceType>>();
+                    return new ApiResponse<List<ServiceType>>
+                    {
+                        IsSuccess = true,
+                        Data = serviceTypes.OrderBy(c => c.Description).ToList(),
+                    };
+                }
+                else
+                {
+                    return new ApiResponse<List<ServiceType>>
+                    {
+                        IsSuccess = false,
+                        ErrorMessage = $"Error: {response.StatusCode} - {content}",
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<List<ServiceType>>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = ex.Message,
+                };
+            }
+        }
+
+        /// <summary>
+        /// GetCurremciesAsync
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ApiResponse<List<Currency>>> GetCurremciesAsync()
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync("Currencies");
+                var content = await response.Content.ReadAsStringAsync();
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var Currencies = await response.Content.ReadFromJsonAsync<List<Currency>>();
+                    return new ApiResponse<List<Currency>>
+                    {
+                        IsSuccess = true,
+                        Data = Currencies.OrderBy(c => c.CurrDesc).ToList(),
+                    };
+                }
+                else
+                {
+                    return new ApiResponse<List<Currency>>
+                    {
+                        IsSuccess = false,
+                        ErrorMessage = $"Error: {response.StatusCode} - {content}",
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<List<Currency>>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = ex.Message,
+                };
+            }
+        }
+
+
+        /// <summary>
+        /// AddVehiclesServicesAsync
+        /// </summary>
+        /// <param name="vehicleservice"></param>
+        /// <returns></returns>
+        public async Task<ApiResponse<VehiclesService>> AddVehiclesServicesAsync(VehiclesService vehicleservice)
+        {
+            try
+            {
+                var json = JsonSerializer.Serialize(vehicleservice);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                var response = await _httpClient.PostAsync("VehiclesServices", content);
+                if (response.IsSuccessStatusCode)
+                {
+
+                    var VehicleServices = await response.Content.ReadFromJsonAsync<VehiclesService>();
+                    return new ApiResponse<VehiclesService>
+                    {
+                        IsSuccess = true,
+                        Data = VehicleServices,
+                    };
+
+                }
+                else
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+
+                    // Handle different status codes
+                    if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                    {
+                        throw new Exception($"Validation error: {errorContent}");
+                    }
+                    else if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
+                    {
+                        throw new Exception($"Conflict: {errorContent}");
+                    }
+                    else
+                    {
+                        throw new Exception($"API error: {response.StatusCode} - {errorContent}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the exception
+                Console.WriteLine($"Error adding vehicle: {ex.Message}");
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// AddVehiclesServiceTypeAsync
+        /// </summary>
+        /// <param name="vehicleservicetype"></param>
+        /// <returns></returns>
+        public async Task<(bool IsSuccess, string Message, VehiclesServiceType vehiclesservicetype)> AddVehiclesServiceTypeAsync(VehiclesServiceType vehicleservicetype)
+        {
+            try
+            {
+                var json = JsonSerializer.Serialize(vehicleservicetype);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                var response = await _httpClient.PostAsync("VehiclesServiceTypes", content);
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    var AddedVehicleServicesTypes = JsonSerializer.Deserialize<VehiclesServiceType>(responseContent);
+                    return (true, "Registration successful", AddedVehicleServicesTypes);
+                }
+                else
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+
+                    // Handle different status codes
+                    if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                    {
+                        throw new Exception($"Validation error: {errorContent}");
+                    }
+                    else if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
+                    {
+                        throw new Exception($"Conflict: {errorContent}");
+                    }
+                    else
+                    {
+                        throw new Exception($"API error: {response.StatusCode} - {errorContent}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the exception
+                Console.WriteLine($"Error adding vehicle: {ex.Message}");
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// GetVehicleByLiscenceID
+        /// </summary>
+        /// <param name="LiscencePlate"></param>
+        /// <returns></returns>
         public async Task<ApiResponse<Vehicle>> GetVehicleByLiscenceID(String LiscencePlate)
         {
             try
@@ -225,8 +451,6 @@ namespace GarageService.GarageLib.Services
         {
             try
             {
-                //var json = JsonSerializer.Serialize(Garage);
-                //var content = new StringContent(json, Encoding.UTF8, "application/json");
                 var json = JsonSerializer.Serialize(Garage);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
                 var response = await _httpClient.PostAsync("GarageProfiles", content);
@@ -269,7 +493,6 @@ namespace GarageService.GarageLib.Services
             }
         }
 
-
         /// <summary>
         /// Update Garage Profile 
         /// </summary>
@@ -311,6 +534,94 @@ namespace GarageService.GarageLib.Services
             }
         }
 
+        /// <summary>
+        /// CheckVehicleAsync
+        /// </summary>
+        /// <param name="vehiclecheck"></param>
+        /// <returns></returns>
+        public async Task<ApiResponse<VehicleCheck>> SaveVehicleCheckAsync(VehicleCheck vehicleCheck)
+        {
+            try
+            {
+                var json = JsonSerializer.Serialize(vehicleCheck);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _httpClient.PostAsync("vehiclechecks", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    var createdVehicleCheck = JsonSerializer.Deserialize<VehicleCheck>(
+                        responseContent,
+                        new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                    return new ApiResponse<VehicleCheck>
+                    {
+                        IsSuccess = true,
+                        Data = createdVehicleCheck,
+                    };
+                }
+                else
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    return new ApiResponse<VehicleCheck>
+                    {
+                        IsSuccess = false,
+                        ErrorMessage = $"Error: {response.StatusCode} - {errorContent}",
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<VehicleCheck>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = $"Exception: {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<ApiResponse<ClientNotification>> SaveClientNotificationsAsync(ClientNotification vehicleCheck)
+        {
+            try
+            {
+                var json = JsonSerializer.Serialize(vehicleCheck);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _httpClient.PostAsync("ClientNotifications", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    var createdVehicleCheck = JsonSerializer.Deserialize<ClientNotification>(
+                        responseContent,
+                        new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                    return new ApiResponse<ClientNotification>
+                    {
+                        IsSuccess = true,
+                        Data = createdVehicleCheck,
+                    };
+                }
+                else
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    return new ApiResponse<ClientNotification>
+                    {
+                        IsSuccess = false,
+                        ErrorMessage = $"Error: {response.StatusCode} - {errorContent}",
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<ClientNotification>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = $"Exception: {ex.Message}"
+                };
+            }
+        }
 
         /// <summary>
         /// Registers a client profile.

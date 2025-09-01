@@ -2,9 +2,9 @@ using GarageService.GarageApp.ViewModels;
 
 namespace GarageService.GarageApp.Views;
 
-public partial class RegisterClientVehiclePage : ContentPage
+public partial class ServicePage : ContentPage
 {
-    public RegisterClientVehiclePage(RegisterClientVehicleViewModel viewModel)
+	public ServicePage(VehiclesServiceViewModel viewModel)
 	{
 		InitializeComponent();
         BindingContext = viewModel;

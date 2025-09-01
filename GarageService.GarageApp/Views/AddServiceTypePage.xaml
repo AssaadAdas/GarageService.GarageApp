@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GarageService.GarageApp.Views.AddServiceTypePage"
+             xmlns:views="clr-namespace:GarageService.GarageApp.Views"
+             x:Name="AddType"
+             >
+    <Grid RowDefinitions="Auto,*">
+        <views:TitleView Title="Add Service"
+                       SubmitCommand="{Binding BindingContext.OnDone}"
+                       BackCommand="{Binding GoBack}"
+                       Grid.Row="0"/>
+        <VerticalStackLayout Grid.Row="1" Padding="20" Spacing="16">
+            <Label Text="Select Service Types" FontSize="20" FontAttributes="Bold"/>
+            <CollectionView x:Name="ServiceTypesCollection"
+                      ItemsSource="{Binding AvailableServiceTypes}"
+                      SelectionMode="Multiple"
+                      >
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Padding="12" Margin="0,0,0,10" BackgroundColor="White" CornerRadius="8">
+                            <Grid ColumnSpacing="12" RowSpacing="8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <!-- CheckBox -->
+                                    <ColumnDefinition Width="*"/>
+                                    <!-- Description -->
+                                    <ColumnDefinition Width="80"/>
+                                    <!-- Cost -->
+                                    <ColumnDefinition Width="120"/>
+                                    <!-- Currency -->
+                                    <ColumnDefinition Width="*"/>
+                                    <!-- Notes -->
+                                </Grid.ColumnDefinitions>
+
+                                <!-- CheckBox -->
+                                <CheckBox Grid.Column="0"
+                                    IsChecked="{Binding IsSelected}" 
+                                    Color="#3498DB"
+                                    VerticalOptions="Center"/>
+
+                                <!-- Description -->
+                                <Label Grid.Column="1"
+                                 Text="{Binding Description}" 
+                                 VerticalOptions="Center"
+                                 FontAttributes="Bold"
+                                 LineBreakMode="TailTruncation"/>
+
+                                <!-- Cost Entry -->
+                                <Entry Grid.Column="2"
+                                 Placeholder="Cost"
+                                 Text="{Binding Cost}"
+                                 Keyboard="Numeric"
+                                 VerticalOptions="Center"
+                                 HorizontalOptions="Fill"/>
+
+                                <!-- Currency Picker -->
+                                <Picker Grid.Column="3"
+                                  ItemsSource="{Binding BindingContext.Currencies, Source={x:Reference ServiceTypesCollection}}"
+                                  ItemDisplayBinding="{Binding CurrDesc}"
+                                  SelectedItem="{Binding SelectedCurrency, Mode=TwoWay}"
+                                  VerticalOptions="Center"
+                                  HorizontalOptions="Fill"/>
+
+                                <!-- Notes Editor -->
+                                <Editor Grid.Column="4"
+                                  Text="{Binding Notes}"
+                                  Placeholder="Notes"
+                                  BackgroundColor="#FAFAFA"
+                                  TextColor="{StaticResource Gray900}"
+                                  AutoSize="TextChanges"
+                                  MinimumHeightRequest="60"
+                                  VerticalOptions="Center"/>
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            <Button Text="Done" 
+       Command="{Binding DoneCommand}" 
+       BackgroundColor="#3498DB"
+       TextColor="White"
+       FontAttributes="Bold"
+       FontSize="16"
+       HeightRequest="50"
+       CornerRadius="25"
+       Margin="0,10"/>
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

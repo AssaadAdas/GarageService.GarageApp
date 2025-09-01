@@ -1,4 +1,5 @@
-﻿using GarageService.GarageLib.Models;
+﻿using GarageService.GarageApp.ViewModels;
+using GarageService.GarageLib.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -15,7 +16,7 @@ namespace GarageService.GarageApp.Services
         public int GarageId { get; set; }
         public string Notes { get; set; }
         public DateTime ServiceDate { get; set; }
-        //public ObservableCollection<SelectableServiceTypeViewModel> ServiceTypes { get; set; }
+        public ObservableCollection<SelectableServiceTypeViewModel> ServiceTypes { get; set; }
 
         public GarageProfile selectedGarage { get; set; } = null!;
     }
