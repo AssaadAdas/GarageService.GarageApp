@@ -2,11 +2,406 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="GarageService.GarageApp.Views.RegisterClientVehiclePage"
-             Title="RegisterClientVehiclePage">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+             xmlns:views="clr-namespace:GarageService.GarageApp.Views"
+             
+             BackgroundColor="{AppThemeBinding Light=#F5F7FA, Dark=#121212}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <!-- Colors -->
+            <Color x:Key="PrimaryColor">#3B71CA</Color>
+            <Color x:Key="PrimaryLightColor">#E8F0FE</Color>
+            <Color x:Key="SecondaryColor">#9E9E9E</Color>
+            <Color x:Key="SuccessColor">#14A44D</Color>
+            <Color x:Key="CardBackgroundLight">#FFFFFF</Color>
+            <Color x:Key="CardBackgroundDark">#1E1E1E</Color>
+            <Color x:Key="CardBorderLight">#E0E0E0</Color>
+            <Color x:Key="CardBorderDark">#333333</Color>
+            <Color x:Key="PrimaryTextLight">#212121</Color>
+            <Color x:Key="PrimaryTextDark">#FFFFFF</Color>
+            <Color x:Key="SecondaryTextLight">#757575</Color>
+            <Color x:Key="SecondaryTextDark">#B0B0B0</Color>
+            <Color x:Key="SectionHeaderLight">#455A64</Color>
+            <Color x:Key="SectionHeaderDark">#90CAF9</Color>
+            <Color x:Key="PickerBackgroundLight">#FFFFFF</Color>
+            <Color x:Key="PickerBackgroundDark">#2D2D2D</Color>
+
+            <!-- Styles -->
+            <Style x:Key="SectionHeader" TargetType="Label">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="Margin" Value="0,0,0,10" />
+                <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource SectionHeaderLight}, Dark={StaticResource SectionHeaderDark}}" />
+            </Style>
+
+            <Style x:Key="FormLabel" TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="Margin" Value="0,10,0,5" />
+                <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource PrimaryTextLight}, Dark={StaticResource PrimaryTextDark}}" />
+            </Style>
+
+            <Style x:Key="RequiredIndicator" TargetType="Label">
+                <Setter Property="Text" Value="*" />
+                <Setter Property="TextColor" Value="#FF5252" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="Margin" Value="2,0,0,0" />
+            </Style>
+
+            <Style x:Key="FormEntry" TargetType="Entry">
+                <Setter Property="HeightRequest" Value="50" />
+                <Setter Property="Margin" Value="0,0,0,10" />
+                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#FFFFFF, Dark=#2D2D2D}" />
+                <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource PrimaryTextLight}, Dark={StaticResource PrimaryTextDark}}" />
+                <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light={StaticResource SecondaryTextLight}, Dark={StaticResource SecondaryTextDark}}" />
+                <Setter Property="FontSize" Value="14" />
+                
+            </Style>
+
+            <Style x:Key="FormPicker" TargetType="Picker">
+                <Setter Property="HeightRequest" Value="50" />
+                <Setter Property="Margin" Value="0,0,0,10" />
+                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource PickerBackgroundLight}, Dark={StaticResource PickerBackgroundDark}}" />
+                <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource PrimaryTextLight}, Dark={StaticResource PrimaryTextDark}}" />
+                <Setter Property="TitleColor" Value="{AppThemeBinding Light={StaticResource SecondaryTextLight}, Dark={StaticResource SecondaryTextDark}}" />
+                <Setter Property="FontSize" Value="14" />
+                
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*">
+        <views:TitleView Title="Create Client Account"
+                     SubmitCommand="{Binding SaveCommand}"
+                     BackCommand="{Binding GoBack}"
+                     Grid.Row="0"/>
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="20" Spacing="20">
+                <!-- Welcome Header -->
+                <Frame CornerRadius="12"
+                       HasShadow="True"
+                       BorderColor="{AppThemeBinding Light={StaticResource CardBorderLight}, Dark={StaticResource CardBorderDark}}"
+                       BackgroundColor="{AppThemeBinding Light={StaticResource CardBackgroundLight}, Dark={StaticResource CardBackgroundDark}}"
+                       Padding="20">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Join Our Garage Community" 
+                               FontSize="20"
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center"
+                               TextColor="{AppThemeBinding Light={StaticResource PrimaryTextLight}, Dark={StaticResource PrimaryTextDark}}"/>
+
+                        <Label Text="Register your account and vehicle to get started with our premium garage services" 
+                               FontSize="14"
+                               HorizontalOptions="Center"
+                               HorizontalTextAlignment="Center"
+                               TextColor="{AppThemeBinding Light={StaticResource SecondaryTextLight}, Dark={StaticResource SecondaryTextDark}}"/>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Account Information -->
+                <Frame CornerRadius="12"
+                       HasShadow="True"
+                       BorderColor="{AppThemeBinding Light={StaticResource CardBorderLight}, Dark={StaticResource CardBorderDark}}"
+                       BackgroundColor="{AppThemeBinding Light={StaticResource CardBackgroundLight}, Dark={StaticResource CardBackgroundDark}}"
+                       Padding="20">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Account Information" Style="{StaticResource SectionHeader}"/>
+
+                        <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="15" RowSpacing="10">
+                            <!-- Username -->
+                            <VerticalStackLayout Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2">
+                                <HorizontalStackLayout>
+                                    <Label Text="Username" Style="{StaticResource FormLabel}"/>
+                                    <Label Style="{StaticResource RequiredIndicator}"/>
+                                </HorizontalStackLayout>
+                                <Entry Placeholder="Choose a username" 
+                                       Text="{Binding Username}"
+                                       Style="{StaticResource FormEntry}"/>
+                            </VerticalStackLayout>
+
+                            <!-- Password -->
+                            <VerticalStackLayout Grid.Column="0" Grid.Row="1">
+                                <HorizontalStackLayout>
+                                    <Label Text="Password" Style="{StaticResource FormLabel}"/>
+                                    <Label Style="{StaticResource RequiredIndicator}"/>
+                                </HorizontalStackLayout>
+                                <Entry Placeholder="Create password" 
+                                       Text="{Binding Password}"
+                                       IsPassword="True"
+                                       Style="{StaticResource FormEntry}"/>
+                            </VerticalStackLayout>
+
+                            <!-- Confirm Password -->
+                            <VerticalStackLayout Grid.Column="1" Grid.Row="1">
+                                <HorizontalStackLayout>
+                                    <Label Text="Confirm Password" Style="{StaticResource FormLabel}"/>
+                                    <Label Style="{StaticResource RequiredIndicator}"/>
+                                </HorizontalStackLayout>
+                                <Entry Placeholder="Confirm your password" 
+                                       Text="{Binding ConfirmPassword}"
+                                       IsPassword="True"
+                                       Style="{StaticResource FormEntry}"/>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Personal Information -->
+                <Frame CornerRadius="12"
+                       HasShadow="True"
+                       BorderColor="{AppThemeBinding Light={StaticResource CardBorderLight}, Dark={StaticResource CardBorderDark}}"
+                       BackgroundColor="{AppThemeBinding Light={StaticResource CardBackgroundLight}, Dark={StaticResource CardBackgroundDark}}"
+                       Padding="20">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Personal Information" Style="{StaticResource SectionHeader}"/>
+
+                        <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="15" RowSpacing="10">
+                            <!-- First Name -->
+                            <VerticalStackLayout Grid.Column="0" Grid.Row="0">
+                                <HorizontalStackLayout>
+                                    <Label Text="First Name" Style="{StaticResource FormLabel}"/>
+                                    <Label Style="{StaticResource RequiredIndicator}"/>
+                                </HorizontalStackLayout>
+                                <Entry Placeholder="Your first name" 
+                                       Text="{Binding FirstName}"
+                                       Style="{StaticResource FormEntry}"/>
+                            </VerticalStackLayout>
+
+                            <!-- Last Name -->
+                            <VerticalStackLayout Grid.Column="1" Grid.Row="0">
+                                <HorizontalStackLayout>
+                                    <Label Text="Last Name" Style="{StaticResource FormLabel}"/>
+                                    <Label Style="{StaticResource RequiredIndicator}"/>
+                                </HorizontalStackLayout>
+                                <Entry Placeholder="Your last name" 
+                                       Text="{Binding LastName}"
+                                       Style="{StaticResource FormEntry}"/>
+                            </VerticalStackLayout>
+
+                            <!-- Address -->
+                            <VerticalStackLayout Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2">
+                                <HorizontalStackLayout>
+                                    <Label Text="Address" Style="{StaticResource FormLabel}"/>
+                                    <Label Style="{StaticResource RequiredIndicator}"/>
+                                </HorizontalStackLayout>
+                                <Entry Placeholder="Your address" 
+                                       Text="{Binding Address}"
+                                       Style="{StaticResource FormEntry}"/>
+                            </VerticalStackLayout>
+
+                            <!-- Country -->
+                            <VerticalStackLayout Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2">
+                                <HorizontalStackLayout>
+                                    <Label Text="Country" Style="{StaticResource FormLabel}"/>
+                                    <Label Style="{StaticResource RequiredIndicator}"/>
+                                </HorizontalStackLayout>
+                                <Picker 
+                                        ItemsSource="{Binding Countries}"
+                                        ItemDisplayBinding="{Binding CountryName}"
+                                        SelectedItem="{Binding SelectedCountry}"
+                                        Style="{StaticResource FormPicker}"/>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Contact Information -->
+                <Frame CornerRadius="12"
+                       HasShadow="True"
+                       BorderColor="{AppThemeBinding Light={StaticResource CardBorderLight}, Dark={StaticResource CardBorderDark}}"
+                       BackgroundColor="{AppThemeBinding Light={StaticResource CardBackgroundLight}, Dark={StaticResource CardBackgroundDark}}"
+                       Padding="20">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Contact Information" Style="{StaticResource SectionHeader}"/>
+
+                        <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="15" RowSpacing="10">
+                            <!-- Email -->
+                            <VerticalStackLayout Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2">
+                                <HorizontalStackLayout>
+                                    <Label Text="Email" Style="{StaticResource FormLabel}"/>
+                                    <Label Style="{StaticResource RequiredIndicator}"/>
+                                </HorizontalStackLayout>
+                                <Entry Placeholder="Your email address" 
+                                       Text="{Binding Email}"
+                                       Keyboard="Email"
+                                       Style="{StaticResource FormEntry}"/>
+                            </VerticalStackLayout>
+
+                            <!-- Phone Extension -->
+                            <VerticalStackLayout Grid.Column="0" Grid.Row="1">
+                                <HorizontalStackLayout>
+                                    <Label Text="Ext" Style="{StaticResource FormLabel}"/>
+                                    <Label Style="{StaticResource RequiredIndicator}"/>
+                                </HorizontalStackLayout>
+                                <Entry Placeholder="Ext" 
+                                       Text="{Binding PhoneExt}"
+                                       Keyboard="Telephone"
+                                       Style="{StaticResource FormEntry}"/>
+                            </VerticalStackLayout>
+
+                            <!-- Phone Number -->
+                            <VerticalStackLayout Grid.Column="1" Grid.Row="1">
+                                <HorizontalStackLayout>
+                                    <Label Text="Phone Number" Style="{StaticResource FormLabel}"/>
+                                    <Label Style="{StaticResource RequiredIndicator}"/>
+                                </HorizontalStackLayout>
+                                <Entry Placeholder="Your phone number" 
+                                       Text="{Binding PhoneNumber}"
+                                       Keyboard="Telephone"
+                                       Style="{StaticResource FormEntry}"/>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Vehicle Information -->
+                <Frame CornerRadius="12"
+                       HasShadow="True"
+                       BorderColor="{AppThemeBinding Light={StaticResource CardBorderLight}, Dark={StaticResource CardBorderDark}}"
+                       BackgroundColor="{AppThemeBinding Light={StaticResource CardBackgroundLight}, Dark={StaticResource CardBackgroundDark}}"
+                       Padding="20">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Vehicle Information" Style="{StaticResource SectionHeader}"/>
+
+                        <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto" ColumnSpacing="15" RowSpacing="10">
+                            <!-- Vehicle Name -->
+                            <VerticalStackLayout Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2">
+                                <HorizontalStackLayout>
+                                    <Label Text="Vehicle Name" Style="{StaticResource FormLabel}"/>
+                                    <Label Style="{StaticResource RequiredIndicator}"/>
+                                </HorizontalStackLayout>
+                                <Entry Placeholder="e.g., My Daily Driver" 
+                                       Text="{Binding VehicleName}"
+                                       Style="{StaticResource FormEntry}"/>
+                            </VerticalStackLayout>
+
+                            <!-- Vehicle Type -->
+                            <VerticalStackLayout Grid.Column="0" Grid.Row="1">
+                                <HorizontalStackLayout>
+                                    <Label Text="Vehicle Type" Style="{StaticResource FormLabel}"/>
+                                    <Label Style="{StaticResource RequiredIndicator}"/>
+                                </HorizontalStackLayout>
+                                <Picker 
+                                        ItemsSource="{Binding vehicletypes}"
+                                        ItemDisplayBinding="{Binding VehicleTypesDesc}"
+                                        SelectedItem="{Binding SelectedVehicleType}"
+                                        Style="{StaticResource FormPicker}"/>
+                            </VerticalStackLayout>
+
+                            <!-- Manufacturer -->
+                            <VerticalStackLayout Grid.Column="1" Grid.Row="1">
+                                <HorizontalStackLayout>
+                                    <Label Text="Manufacturer" Style="{StaticResource FormLabel}"/>
+                                    <Label Style="{StaticResource RequiredIndicator}"/>
+                                </HorizontalStackLayout>
+                                <Picker 
+                                        ItemsSource="{Binding manufacturers}"
+                                        ItemDisplayBinding="{Binding ManufacturerDesc}"
+                                        SelectedItem="{Binding SelectedManufacturer}"
+                                        Style="{StaticResource FormPicker}"/>
+                            </VerticalStackLayout>
+
+                            <!-- Fuel Type -->
+                            <VerticalStackLayout Grid.Column="0" Grid.Row="2">
+                                <HorizontalStackLayout>
+                                    <Label Text="Fuel Type" Style="{StaticResource FormLabel}"/>
+                                    <Label Style="{StaticResource RequiredIndicator}"/>
+                                </HorizontalStackLayout>
+                                <Picker 
+                                        ItemsSource="{Binding fueltypes}"
+                                        ItemDisplayBinding="{Binding FuelTypeDesc}"
+                                        SelectedItem="{Binding Selectedfueltype}"
+                                        Style="{StaticResource FormPicker}"/>
+                            </VerticalStackLayout>
+
+                            <!-- Measure Units -->
+                            <VerticalStackLayout Grid.Column="1" Grid.Row="2">
+                                <HorizontalStackLayout>
+                                    <Label Text="Measure Units" Style="{StaticResource FormLabel}"/>
+                                    <Label Style="{StaticResource RequiredIndicator}"/>
+                                </HorizontalStackLayout>
+                                <Picker 
+                                        ItemsSource="{Binding meassureunits}"
+                                        ItemDisplayBinding="{Binding MeassureUnitDesc}"
+                                        SelectedItem="{Binding selectedmeassureunit}"
+                                        Style="{StaticResource FormPicker}"/>
+                            </VerticalStackLayout>
+
+                            <!-- Model -->
+                            <VerticalStackLayout Grid.Column="0" Grid.Row="3">
+                                <HorizontalStackLayout>
+                                    <Label Text="Model" Style="{StaticResource FormLabel}"/>
+                                    <Label Style="{StaticResource RequiredIndicator}"/>
+                                </HorizontalStackLayout>
+                                <Entry Text="{Binding Model}"
+                                       Placeholder="Vehicle model"
+                                       Style="{StaticResource FormEntry}"/>
+                            </VerticalStackLayout>
+
+                            <!-- License Plate -->
+                            <VerticalStackLayout Grid.Column="1" Grid.Row="3">
+                                <HorizontalStackLayout>
+                                    <Label Text="License Plate" Style="{StaticResource FormLabel}"/>
+                                    <Label Style="{StaticResource RequiredIndicator}"/>
+                                </HorizontalStackLayout>
+                                <Entry Text="{Binding LiscencePlate}"
+                                       Placeholder="License plate number"
+                                       Style="{StaticResource FormEntry}"/>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Additional Vehicle Details -->
+                <Frame CornerRadius="12"
+                       HasShadow="True"
+                       BorderColor="{AppThemeBinding Light={StaticResource CardBorderLight}, Dark={StaticResource CardBorderDark}}"
+                       BackgroundColor="{AppThemeBinding Light={StaticResource CardBackgroundLight}, Dark={StaticResource CardBackgroundDark}}"
+                       Padding="20">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Additional Vehicle Details" Style="{StaticResource SectionHeader}"/>
+
+                        <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="15" RowSpacing="10">
+                            <!-- Chassis Number -->
+                            <VerticalStackLayout Grid.Column="0" Grid.Row="0">
+                                <HorizontalStackLayout>
+                                    <Label Text="Chassis Number" Style="{StaticResource FormLabel}"/>
+                                    <Label Style="{StaticResource RequiredIndicator}"/>
+                                </HorizontalStackLayout>
+                                
+                                <Entry Text="{Binding ChassisNumber}"
+                                       Placeholder="Chassis number"
+                                       Style="{StaticResource FormEntry}"/>
+                            </VerticalStackLayout>
+
+                            <!-- VIN -->
+                            <VerticalStackLayout Grid.Column="1" Grid.Row="0">
+                                
+                                <HorizontalStackLayout>
+                                    <Label Text="VIN" Style="{StaticResource FormLabel}"/>
+                                    <Label Style="{StaticResource RequiredIndicator}"/>
+                                </HorizontalStackLayout>
+                                <Entry Text="{Binding Identification}"
+                                       Placeholder="Vehicle identification number"
+                                       Style="{StaticResource FormEntry}"/>
+                            </VerticalStackLayout>
+
+                            <!-- Mileage -->
+                            <VerticalStackLayout Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2">
+                                <HorizontalStackLayout>
+                                    <Label Text="Mileage" Style="{StaticResource FormLabel}"/>
+                                    <Label Style="{StaticResource RequiredIndicator}"/>
+                                </HorizontalStackLayout>
+                                
+                                <Entry Text="{Binding Odometer}"
+                                       Placeholder="Current mileage"
+                                       Keyboard="Numeric"
+                                       Style="{StaticResource FormEntry}"/>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Frame>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
 </ContentPage>

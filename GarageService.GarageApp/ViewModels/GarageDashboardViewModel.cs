@@ -75,16 +75,21 @@ namespace GarageService.GarageApp.ViewModels
             _sessionService = sessionService;
             PremuimCommand = new Command(async () => await LoadPremuim());
             //LogOutCommand = new Command(async () => await LogOut());
+            AddVehicleCommand = new Command(async () => await AddVehicle());
             AddServicesCommand = new Command<Vehicle>(async (vehicle) => await AddServices(vehicle));
             CheckVehicleCommand = new Command<Vehicle>(async (vehicle) => await CheckVehicle(vehicle));
             SearchVehicleCommand = new Command(async () => await SearchVehicleAsync());
             EditProfileCommand = new Command(async () => await EditProfile());
-            
+            //btnServices.enabled = false;
             LoadGarageProfile();
         }
         private async Task AddServices(Vehicle vehicle)
         {
             await Shell.Current.GoToAsync($"{nameof(ServicePage)}?vehileid={vehicle.Id}");
+        }
+        private async Task AddVehicle()
+        {
+            await Shell.Current.GoToAsync($"{nameof(RegisterClientVehiclePage)}");
         }
         private async Task CheckVehicle(Vehicle vehicle)
         {
@@ -100,10 +105,14 @@ namespace GarageService.GarageApp.ViewModels
             if (response.IsSuccess)
             {
                 IsChecked = true;
+                //btnServices.enabled = true;
+                //btnChecks.enabled = false;
                 WriteClientNotification(vehicle);
             }
             else
             {
+                //btnServices.enabled = false;
+                //btnChecks.enabled = true;
                 IsChecked = false;
             }
         }
