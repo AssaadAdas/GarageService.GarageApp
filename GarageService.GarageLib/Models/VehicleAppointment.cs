@@ -15,7 +15,9 @@ namespace GarageService.GarageLib.Models
         public DateTime AppointmentDate { get; set; }
 
         public string? Note { get; set; }
+        public int Garageid { get; set; }
 
         public virtual Vehicle Vehicle { get; set; } = null!;
+        public virtual GarageProfile? Garage { get; set; } = null!;
     }
 }
