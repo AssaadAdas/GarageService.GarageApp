@@ -1148,6 +1148,41 @@ namespace GarageService.GarageLib.Services
                 };
             }
         }
+
+        public async Task<ApiResponse<List<VehicleAppointment>>> GetUpcomingAppointments(int GarageID)
+        {
+            try
+            {
+                // Call the API endpoint
+
+                using var response = await _httpClient.GetAsync($"VehicleAppointments/upcoming/{GarageID}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var appointments = await response.Content.ReadFromJsonAsync<List<VehicleAppointment>>();
+                    return new ApiResponse<List<VehicleAppointment>> { Data = appointments, IsSuccess = true };
+                }
+
+                // Handle non-success status codes
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                return response.StatusCode switch
+                {
+                    HttpStatusCode.NotFound =>
+                        new ApiResponse<List<VehicleAppointment>> { ErrorMessage = "User type not found", IsSuccess = false },
+                    _ =>
+                        new ApiResponse<List<VehicleAppointment>> { ErrorMessage = $"Error fetching user type: {response.ReasonPhrase}", IsSuccess = false }
+                };
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions (network issues, etc.)
+                return new ApiResponse<List<VehicleAppointment>>
+                {
+                    ErrorMessage = $"An error occurred while fetching user type: {ex.Message}",
+                    IsSuccess = false
+                };
+            }
+        }
     }
     public class ApiResponse<T>
     {

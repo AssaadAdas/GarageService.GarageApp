@@ -35,6 +35,21 @@ namespace GarageService.GarageApp.ViewModels
                 }
             }
         }
+
+        private List<VehicleAppointment> _UpcomingvehicleAppointments;
+        public ObservableCollection<VehicleAppointment> UpcomingVehicleAppointments { get; set; } = new();
+        //public List<VehicleAppointment> UpcomingVehicleAppointments
+        //{
+        //    get => _UpcomingvehicleAppointments;
+        //    set
+        //    {
+        //        if (_UpcomingvehicleAppointments != value)
+        //        {
+        //            _UpcomingvehicleAppointments = value;
+        //            OnPropertyChanged(nameof(VehicleAppointment));
+        //        }
+        //    }
+        //}
         private ObservableCollection<Vehicle> _vehicles = new();
         public ObservableCollection<Vehicle> Vehicles
         {
@@ -159,6 +174,16 @@ namespace GarageService.GarageApp.ViewModels
         {
             await Shell.Current.GoToAsync($"{nameof(EditGaragePage)}");
         }
+        public async Task LoadUpComintAppointments(int GarageID)
+        {
+            var response = await _ApiService.GetUpcomingAppointments(GarageID);
+            if (response.IsSuccess)
+            {
+                //UpcomingVehicleAppointments = response.Data;
+                UpcomingVehicleAppointments = new ObservableCollection<VehicleAppointment>(response.Data);
+                OnPropertyChanged(nameof(UpcomingVehicleAppointments));
+            }
+        }
         public async Task LoadGarageProfile()
         {
             // Get current user ID from your authentication system
@@ -168,6 +193,7 @@ namespace GarageService.GarageApp.ViewModels
             if (response.IsSuccess)
             {
                 GarageProfile = response.Data;
+                LoadUpComintAppointments(GarageProfile.Id);
             }
         }
         private int GetCurrentUserId()

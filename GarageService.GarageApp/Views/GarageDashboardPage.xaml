@@ -144,7 +144,7 @@
                                          BackgroundColor="{AppThemeBinding Light=#EEEEEE, Dark=#444444}"  
                                          HorizontalOptions="Fill"/>
 
-                                <CollectionView ItemsSource="{Binding GarageProfile.VehicleAppointments}" 
+                                <CollectionView ItemsSource="{Binding UpcomingVehicleAppointments}" 
                                                 SelectionMode="Single"
                                                 EmptyView="No upcoming Appointments">
                                     <CollectionView.ItemTemplate>
