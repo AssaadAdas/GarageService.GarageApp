@@ -54,7 +54,6 @@ namespace GarageService.GarageApp.ViewModels
                 }
             }
         }
-
         
         public int GarageId { get; set; }
         
@@ -114,6 +113,8 @@ namespace GarageService.GarageApp.ViewModels
             }
         }
 
+        decimal TotalServiceCost = 0;
+        string Currency = "USD";
         private readonly ApiService _apiService;
         private readonly ISessionService _sessionService;
         private readonly ServiceFormState _formState;
@@ -240,8 +241,7 @@ namespace GarageService.GarageApp.ViewModels
             _formState.selectedGarage = SelectedGarage;
             await Shell.Current.GoToAsync($"{nameof(AddServiceTypePage)}");
         }
-        decimal TotalServiceCost = 0;
-        string Currency = "USD";
+
         private async Task SaveService()
         {
             if (ServiceTypess is null)
@@ -311,7 +311,7 @@ namespace GarageService.GarageApp.ViewModels
             {
                 WriteClientNotification(vehicleid);
                 await Shell.Current.DisplayAlert("Success", "Service saved and vehicle checked out.", "OK");
-                await Shell.Current.GoToAsync($"..");
+                //await Shell.Current.GoToAsync($"..");
             }
             else
             {
