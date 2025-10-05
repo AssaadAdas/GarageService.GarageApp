@@ -1,4 +1,5 @@
-﻿using GarageService.GarageApp.Views;
+﻿using GarageService.GarageApp.Services;
+using GarageService.GarageApp.Views;
 using GarageService.GarageLib.Models;
 using GarageService.GarageLib.Services;
 using System;
@@ -24,15 +25,21 @@ namespace GarageService.GarageApp.ViewModels
         public ICommand LoadCommand { get; }
         public ICommand BackCommand { get; }
         private readonly ApiService _apiService;
+        private ServiceFormState _formState;
+        public List<SelectableServiceTypeViewModel> SelectedServiceTypes { get; set; } = new();
+        private ObservableCollection<SelectableServiceTypeViewModel> _previouslySelectedServiceTypes;
 
-        public VehiclesServiceTypeViewModel(ApiService apiService)
+        public VehiclesServiceTypeViewModel(ApiService apiService, ServiceFormState formState)
         {
             _apiService = apiService;
+            _formState = formState;
+            _previouslySelectedServiceTypes = _formState.SelectedServiceTypes;
             SaveCommand = new Command(async () => await OnDone());
             LoadCommand = new Command(async () => await LoadServiceTypesAsync());
             BackCommand = new Command(async () => await GoBack());
-            LoadCommand.Execute(null);
             _ = LoadCurrenciesAsync();
+            LoadCommand.Execute(null);
+            
         }
         private async Task GoBack()
         {
@@ -71,7 +78,26 @@ namespace GarageService.GarageApp.ViewModels
                 if (apiResponse.IsSuccess)
                 {
                     AvailableServiceTypes = new ObservableCollection<SelectableServiceTypeViewModel>(
-                                     apiResponse.Data.Select(st => new SelectableServiceTypeViewModel(st)));
+                  apiResponse.Data.Select(st =>
+                  {
+                      var vm = new SelectableServiceTypeViewModel(st);
+                      // Restore IsSelected and Cost if previously selected
+                      var prev = _previouslySelectedServiceTypes?.FirstOrDefault(x => x.Id == st.Id);
+                      if (prev != null)
+                      {
+                          vm.IsSelected = true;
+                          vm.Cost = prev.Cost;
+                          vm.Notes = prev.Notes;
+                          vm.CurrId = prev.CurrId;
+
+                          vm.CurrDesc = prev.CurrDesc;
+                          vm.CurrId = prev.CurrId;
+                          // Set SelectedCurrency if Currencies are loaded
+                          if (Currencies != null)
+                              vm.SelectedCurrency = Currencies.FirstOrDefault(c => c.Id == prev.CurrId);
+                      }
+                      return vm;
+                  }));
                 }
                 else
                 {

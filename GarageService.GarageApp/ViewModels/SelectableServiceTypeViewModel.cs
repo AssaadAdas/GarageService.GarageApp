@@ -17,7 +17,14 @@ namespace GarageService.GarageApp.ViewModels
         public decimal Cost
         {
             get => _cost;
-            set => SetProperty(ref _cost, value);
+            set
+            {
+                if (_cost != value)
+                {
+                    _cost = value;
+                    OnPropertyChanged(nameof(Cost));
+                }
+            }
         }
 
         private Currency _selectedCurrency;

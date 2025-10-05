@@ -56,12 +56,16 @@ namespace GarageService.GarageApp.ViewModels
         }
         
         public int GarageId { get; set; }
-        
-        private ObservableCollection<SelectableServiceTypeViewModel> _ServiceTypess;
+
+        private ObservableCollection<SelectableServiceTypeViewModel> _ServiceTypess = new();
         public ObservableCollection<SelectableServiceTypeViewModel> ServiceTypess
         {
             get => _ServiceTypess;
-            set => SetProperty(ref _ServiceTypess, value);
+            set
+            {
+                _ServiceTypess = value;
+                OnPropertyChanged(nameof(ServiceTypess));
+            }
         }
         public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
@@ -79,13 +83,17 @@ namespace GarageService.GarageApp.ViewModels
                     var toRemove = ServiceTypess.Where(x => !selected.Any(s => s.Id == x.Id)).ToList();
                     foreach (var item in toRemove)
                         ServiceTypess.Remove(item);
-
+                    decimal TotalServiceAmounts = 0;
                     // Add or update items from the new selection
                     foreach (var item in selected)
                     {
                         var existing = ServiceTypess.FirstOrDefault(x => x.Id == item.Id);
                         if (existing == null)
+                        {
                             ServiceTypess.Add(item);
+                            TotalServiceAmounts += item.Cost;
+                        }
+                            
                         else
                         {
                             // Only update the properties that might have changed in the service types
@@ -93,8 +101,12 @@ namespace GarageService.GarageApp.ViewModels
                             existing.Cost = item.Cost;
                             existing.Notes = item.Notes;
                             existing.CurrId = item.CurrId;
+                            existing.CurrDesc = item.CurrDesc;
+                            TotalServiceAmounts += item.Cost;
                         }
                     }
+                    TotalServiceAmount = TotalServiceAmounts;
+                    OnPropertyChanged(nameof(TotalServiceAmount));
                 }
                 OnPropertyChanged(nameof(ServiceTypess));
             }
@@ -112,7 +124,7 @@ namespace GarageService.GarageApp.ViewModels
                 }
             }
         }
-
+        
         decimal TotalServiceCost = 0;
         string Currency = "USD";
         private readonly ApiService _apiService;
@@ -206,6 +218,13 @@ namespace GarageService.GarageApp.ViewModels
                 SelectedGarage = GarageProfile;
             }
         }
+        private decimal _totalServiceAmount;
+        public decimal TotalServiceAmount
+        {
+            get => _totalServiceAmount;
+            set => SetProperty(ref _totalServiceAmount, value);
+        }
+
         private int GetCurrentUserId()
         {
             // Implement your actual user ID retrieval logic
@@ -239,6 +258,8 @@ namespace GarageService.GarageApp.ViewModels
             _formState.ServiceDate = ServiceDate;
             _formState.ServiceTypes = ServiceTypess;
             _formState.selectedGarage = SelectedGarage;
+            _formState.SelectedServiceTypes = new ObservableCollection<SelectableServiceTypeViewModel>(
+              ServiceTypess.Where(st => st.IsSelected));
             await Shell.Current.GoToAsync($"{nameof(AddServiceTypePage)}");
         }
 
