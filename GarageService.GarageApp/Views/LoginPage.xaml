@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="GarageService.GarageApp.Views.LoginPage"
+             BackgroundImageSource="garage_bg.png"
              Title="LoginPage">
     <ScrollView>
         <VerticalStackLayout Padding="30,40" Spacing="25">
@@ -16,12 +17,12 @@
                     FontSize="28"
                     FontAttributes="Bold"
                     HorizontalOptions="Center"
-                    TextColor="#2C3E50"/>
+                    TextColor="Black"/>
 
                 <Label Text="Sign in to access your account"
                     FontSize="14"
                     HorizontalOptions="Center"
-                    TextColor="#7F8C8D"/>
+                    TextColor="Black"/>
             </StackLayout>
 
             <!-- Login Form -->
@@ -89,9 +90,9 @@
                       VerticalOptions="Center"
                       HorizontalOptions="FillAndExpand"/>
                 <Label Text="OR" 
-                    TextColor="#95A5A6"
+                    TextColor="Black"
                     FontSize="12"/>
-                <BoxView Color="#E0E0E0" 
+                <BoxView Color="Black" 
                       HeightRequest="1" 
                       VerticalOptions="Center"
                       HorizontalOptions="FillAndExpand"/>
@@ -100,7 +101,7 @@
             <!-- Register Section -->
             <HorizontalStackLayout HorizontalOptions="Center" Spacing="5">
                 <Label Text="Don't have an account?" 
-                    TextColor="#7F8C8D"
+                    TextColor="Black"
                     FontSize="14"/>
                 <Button Text="Sign Up" 
                      Command="{Binding RegisterCommand}"
