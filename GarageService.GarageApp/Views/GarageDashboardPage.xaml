@@ -6,7 +6,7 @@
              x:Name="PageRoot"
              >
     <Grid RowDefinitions="Auto,*">
-        <views:DashBoardTitle Title="Client DashBoard"
+        <views:DashBoardTitle Title="Garage DashBoard"
                   SaveCommand="{Binding LogOutCommand}"
                   Grid.Row="0"/>
         <Grid Grid.Row="1" RowDefinitions="Auto,*,Auto" RowSpacing="0">
@@ -336,7 +336,7 @@
                                                     <FormattedString>
                                                         <Span Text="Exipre:" FontAttributes="Bold"/>
                                                         <Span Text=" "/>
-                                                        <Span Text="{Binding GarageProfile.GaragePremiumRegistration.ExpiryDate}" FontAttributes="Bold"/>
+                                                        <Span Text="{Binding GaragePremiumRegistration.ExpiryDate}" FontAttributes="Bold"/>
                                                     </FormattedString>
                                                 </Label.FormattedText>
                                             </Label>

@@ -16,7 +16,7 @@
                VerticalOptions="Center"/>
               
               <Button x:Name="SaveButton"
-               Text="🚪"
+               Text="⏻"
                Command="{Binding SaveCommand}"
                BackgroundColor="Transparent"
                TextColor="Black"

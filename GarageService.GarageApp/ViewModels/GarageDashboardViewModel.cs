@@ -38,7 +38,20 @@ namespace GarageService.GarageApp.ViewModels
 
         private List<VehicleAppointment> _UpcomingvehicleAppointments;
         public ObservableCollection<VehicleAppointment> UpcomingVehicleAppointments { get; set; } = new();
-       
+        
+        private GaragePremiumRegistration _GaragePremiumRegistration;
+        public GaragePremiumRegistration GaragePremiumRegistration
+        {
+            get => _GaragePremiumRegistration;
+            set
+            {
+                if (_GaragePremiumRegistration != value)
+                {
+                    _GaragePremiumRegistration = value;
+                    OnPropertyChanged(nameof(GaragePremiumRegistration));
+                }
+            }
+        }
         private ObservableCollection<Vehicle> _vehicles = new();
         public ObservableCollection<Vehicle> Vehicles
         {
@@ -140,6 +153,7 @@ namespace GarageService.GarageApp.ViewModels
         {
             await Shell.Current.GoToAsync($"{nameof(PremuimPage)}");
         }
+
         private async Task SearchVehicleAsync()
         {
             // Get current user ID from your authentication system
@@ -158,6 +172,7 @@ namespace GarageService.GarageApp.ViewModels
         {
             await Shell.Current.GoToAsync($"{nameof(EditGaragePage)}");
         }
+
         public async Task LoadUpComintAppointments(int GarageID)
         {
             var response = await _ApiService.GetUpcomingAppointments(GarageID);
@@ -168,6 +183,17 @@ namespace GarageService.GarageApp.ViewModels
                 OnPropertyChanged(nameof(UpcomingVehicleAppointments));
             }
         }
+
+        public async Task LoadGaragePremuim(int GarageID)
+        {
+            string ErrorMessage = string.Empty;
+            GaragePremiumRegistration = await _ApiService.GetActiveRegistrationByGarageId(GarageID);
+            if (GaragePremiumRegistration == null)
+            {
+                ErrorMessage = "No active registration found for this garage.";
+            }
+        }
+
         public async Task LoadGarageProfile()
         {
             // Get current user ID from your authentication system
@@ -178,6 +204,7 @@ namespace GarageService.GarageApp.ViewModels
             {
                 GarageProfile = response.Data;
                 LoadUpComintAppointments(GarageProfile.Id);
+                LoadGaragePremuim(GarageProfile.Id);
             }
         }
         private int GetCurrentUserId()
