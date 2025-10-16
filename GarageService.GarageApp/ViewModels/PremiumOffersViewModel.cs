@@ -1,4 +1,5 @@
-﻿using GarageService.GarageLib.Models;
+﻿using GarageService.GarageApp.Views;
+using GarageService.GarageLib.Models;
 using GarageService.GarageLib.Services;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,8 @@ namespace GarageService.GarageApp.ViewModels
         public ICommand LoadPremiumOffersCommand { get; }
         public ICommand LoadProfileCommand { get; }
         public ICommand BackCommand { get; }
+        public ICommand SelectOfferCommand { get; }
+        public ICommand SubscribeCommand { get; }
 
         private GarageProfile _garageProfile;
         public GarageProfile GarageProfile
@@ -33,19 +36,14 @@ namespace GarageService.GarageApp.ViewModels
             }
         }
 
-        //private List<PremiumOffer> _premiumoffers;
-        //public List<PremiumOffer> PremiumOffers
-        //{
-        //    get => _premiumoffers;
-        //    set
-        //    {
-        //        if (_premiumoffers != value)
-        //        {
-        //            _premiumoffers = value;
-        //            OnPropertyChanged(nameof(PremiumOffer));
-        //        }
-        //    }
-        //}
+        private PremiumOffer _selectedPremiumOffer;
+        public PremiumOffer SelectedPremiumOffer
+        {
+            get => _selectedPremiumOffer;
+            set => SetProperty(ref _selectedPremiumOffer, value);
+        }
+
+
         private ObservableCollection<PremiumOffer> _premiumOffers;
         public ObservableCollection<PremiumOffer> PremiumOffers
         {
@@ -59,6 +57,8 @@ namespace GarageService.GarageApp.ViewModels
             
             BackCommand = new Command(async () => await GoBack());
             LoadProfileCommand = new Command(async () => await LoadProfile());
+            SubscribeCommand = new Command(async () => await SubscribeOrder());
+            
             LoadProfileCommand.Execute(null);
             LoadPremiumOffersCommand = new Command(async () => await LoadPremiumOffers());
             
@@ -90,6 +90,19 @@ namespace GarageService.GarageApp.ViewModels
                 ErrorMessage = response.ErrorMessage;
             }
         }
+
+        private async Task SubscribeOrder()
+        {
+            if (SelectedPremiumOffer == null)
+            {
+                await Shell.Current.DisplayAlert("Select Offer", "Please select a premium offer.", "OK");
+                return;
+            }
+
+            // Navigate to the order page, passing the selected offer's ID
+            await Shell.Current.GoToAsync($"{nameof(GaragePaymentOrdersPage)}?paymentOrderid={SelectedPremiumOffer.Id}");
+        }
+      
         private async Task LoadProfile()
         {
             // Get current user ID from your authentication system
@@ -107,6 +120,7 @@ namespace GarageService.GarageApp.ViewModels
                 ErrorMessage = response.ErrorMessage;
             }
         }
+
         private int GetCurrentUserId()
         {
             // Implement your actual user ID retrieval logic

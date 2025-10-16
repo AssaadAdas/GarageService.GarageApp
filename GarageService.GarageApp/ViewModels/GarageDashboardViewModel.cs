@@ -38,18 +38,7 @@ namespace GarageService.GarageApp.ViewModels
 
         private List<VehicleAppointment> _UpcomingvehicleAppointments;
         public ObservableCollection<VehicleAppointment> UpcomingVehicleAppointments { get; set; } = new();
-        //public List<VehicleAppointment> UpcomingVehicleAppointments
-        //{
-        //    get => _UpcomingvehicleAppointments;
-        //    set
-        //    {
-        //        if (_UpcomingvehicleAppointments != value)
-        //        {
-        //            _UpcomingvehicleAppointments = value;
-        //            OnPropertyChanged(nameof(VehicleAppointment));
-        //        }
-        //    }
-        //}
+       
         private ObservableCollection<Vehicle> _vehicles = new();
         public ObservableCollection<Vehicle> Vehicles
         {
@@ -164,11 +153,6 @@ namespace GarageService.GarageApp.ViewModels
                 Vehicles.Add(response.Data); // If response.Data is a single Vehicle
             }
         }
-
-        //private async Task AddClientVehicle()
-        //{
-        //    await Shell.Current.GoToAsync($"{nameof(RegisterClientVehiclePage)}");
-        //}
 
         private async Task EditProfile()
         {

@@ -16,7 +16,10 @@ namespace GarageService.GarageApp
             Routing.RegisterRoute(nameof(RegisterClientVehiclePage), typeof(RegisterClientVehiclePage));
             Routing.RegisterRoute(nameof(ServicePage), typeof(ServicePage));
             Routing.RegisterRoute(nameof(AddServiceTypePage), typeof(AddServiceTypePage));
+            Routing.RegisterRoute(nameof(GaragePaymentOrdersPage), typeof(GaragePaymentOrdersPage));
+            Routing.RegisterRoute(nameof(PaymentPage), typeof(PaymentPage));
             
+
             // Set initial route
             CurrentItem = Items[0];
         }

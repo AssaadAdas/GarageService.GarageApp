@@ -31,6 +31,8 @@ public static class MauiProgram
         builder.Services.AddTransient<SelectableServiceTypeViewModel>();
         builder.Services.AddTransient<VehiclesServiceViewModel>();
         builder.Services.AddTransient<VehiclesServiceTypeViewModel>();
+        builder.Services.AddTransient<GaragePaymentOrdersViewModel>();
+        builder.Services.AddTransient<PaymentViewModel>();
 
         // Register Views
         builder.Services.AddTransient<MainPage>();
@@ -42,6 +44,8 @@ public static class MauiProgram
         builder.Services.AddTransient<RegisterClientVehiclePage>();
         builder.Services.AddTransient<AddServiceTypePage>();
         builder.Services.AddTransient<ServicePage>();
+        builder.Services.AddTransient<GaragePaymentOrdersPage>();
+        builder.Services.AddTransient<PaymentPage>();
         // Services
         builder.Services.AddSingleton<ISessionService, SessionService>();
         builder.Services.AddSingleton<ISecureStorage>(SecureStorage.Default);

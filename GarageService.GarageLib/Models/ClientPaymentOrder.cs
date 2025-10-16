@@ -28,7 +28,7 @@ namespace GarageService.GarageLib.Models
 
         public int PremiumOfferid { get; set; }
 
-        public virtual ClientPaymentMethod Client { get; set; } = null!;
+        public virtual ClientPaymentMethod? Client { get; set; } = null!;
 
         public virtual Currency Curr { get; set; } = null!;
 

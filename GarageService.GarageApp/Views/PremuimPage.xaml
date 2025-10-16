@@ -3,38 +3,79 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:views="clr-namespace:GarageService.GarageApp.Views"
              x:Class="GarageService.GarageApp.Views.PremuimPage"
-             >
-    <Grid RowDefinitions="Auto,*">
-        <views:TitleView Title="Premuim Offers"
-          SubmitCommand="{Binding SaveCommand}"
-          BackCommand="{Binding GoBack}"
-          Grid.Row="0"/>
+             xmlns:converters="clr-namespace:GarageService.GarageApp.Services"
+             x:Name="PageRoot"
+             BackgroundColor="{AppThemeBinding Light=#F5F5F5, Dark=#181818}">
+    
+    <Grid RowDefinitions="Auto,*,Auto" Padding="0">
+        <!-- Title/Header -->
+        <views:TitleView Title="Premium Offers"
+                         SubmitCommand="{Binding SaveCommand}"
+                         BackCommand="{Binding GoBack}"
+                         Grid.Row="0"/>
+
+        <!-- Offers List -->
         <ScrollView Grid.Row="1">
-            <CollectionView ItemsSource="{Binding PremiumOffers}"   
-                                        EmptyView="No PremiumOffer registered">
+            <CollectionView ItemsSource="{Binding PremiumOffers}"
+                            EmptyView="No premium offers registered"
+                            Margin="0,16,0,16">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Frame CornerRadius="12"   
-                                            Padding="16"  
-                                            Margin="0,0,0,10"  
-                                            BackgroundColor="{AppThemeBinding Light=#F8F9FA, Dark=#3A3A3A}"  
-                                            HasShadow="True">
-                            <HorizontalStackLayout Grid.Column="0" Spacing="8">
-                                <Label Text="{Binding PremiumDesc}"   
-                                                      FontAttributes="Bold"  
-                                                      TextColor="{AppThemeBinding Light=#333333, Dark=White}"/>
-                                <Label Text="{Binding PremiumCost}"   
-                                                      FontAttributes="Bold"  
-                                                      TextColor="{AppThemeBinding Light=#333333, Dark=White}"/>
-
-                                <Label Text="{Binding Curr.CurrDesc}"   
-                                                      FontAttributes="Bold"  
-                                                      TextColor="{AppThemeBinding Light=#333333, Dark=White}"/>
-                            </HorizontalStackLayout>
+                        <Frame CornerRadius="18"
+                               Padding="20"
+                               Margin="16,8"
+                               BackgroundColor="{AppThemeBinding Light=White, Dark=#23272F}"
+                               BorderColor="{AppThemeBinding Light=#E0E0E0, Dark=#404040}"
+                               HasShadow="True">
+                            <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,Auto" RowSpacing="8">
+                                <!-- Offer Description -->
+                                <Label Grid.Row="0" Grid.Column="0"
+                                       Text="{Binding PremiumDesc}"
+                                       FontSize="18"
+                                       FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light=#2C3E50, Dark=White}"/>
+                                <!-- Price and Currency -->
+                                <HorizontalStackLayout Grid.Row="1" Grid.Column="0" Spacing="6">
+                                    <Label Text="{Binding PremiumCost}"
+                                           FontSize="22"
+                                           FontAttributes="Bold"
+                                           TextColor="{AppThemeBinding Light=#27AE60, Dark=#2ECC71}"/>
+                                    <Label Text="{Binding Curr.CurrDesc}"
+                                           FontSize="16"
+                                           TextColor="{AppThemeBinding Light=#7F8C8D, Dark=#BDC3C7}"/>
+                                </HorizontalStackLayout>
+                                <!-- Feature/Highlight -->
+                                <Label Grid.Row="2" Grid.Column="0"
+                                       Text="Best value for your business"
+                                       FontSize="13"
+                                       TextColor="{AppThemeBinding Light=#2980B9, Dark=#6DD5FA}"
+                                       FontAttributes="Italic"/>
+                                <!-- Radio Button for selection -->
+                                <RadioButton
+                                 Grid.Row="0" Grid.RowSpan="3" Grid.Column="1"
+                                 GroupName="PremiumOffersGroup"
+                                 IsChecked="{Binding Source={x:Reference PageRoot}, Path=BindingContext.SelectedPremiumOffer, Mode=TwoWay, Converter={StaticResource ReferenceEqualsConverter}, ConverterParameter={Binding .}}"
+                                 CheckedChanged="OnOfferCheckedChanged"
+                                 VerticalOptions="Center"
+                                 HeightRequest="32"
+                                 WidthRequest="32"/>
+                            </Grid>
                         </Frame>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
         </ScrollView>
+
+        <!-- Footer/CTA Button -->
+        <Button Grid.Row="2"
+                Text="Get Premium"
+                Command="{Binding SubscribeCommand}"
+                Margin="24,0,24,24"
+                HeightRequest="54"
+                CornerRadius="27"
+                BackgroundColor="{AppThemeBinding Light=#FF9800, Dark=#FFA726}"
+                TextColor="White"
+                FontAttributes="Bold"
+                FontSize="18"/>
     </Grid>
 </ContentPage>

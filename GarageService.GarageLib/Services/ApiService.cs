@@ -344,7 +344,6 @@ namespace GarageService.GarageLib.Services
             }
         }
 
-
         /// <summary>
         /// GetServiceTypesAsync
         /// </summary>
@@ -422,7 +421,6 @@ namespace GarageService.GarageLib.Services
                 };
             }
         }
-
 
         /// <summary>
         /// AddVehiclesServicesAsync
@@ -1149,6 +1147,11 @@ namespace GarageService.GarageLib.Services
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="GarageID"></param>
+        /// <returns></returns>
         public async Task<ApiResponse<List<VehicleAppointment>>> GetUpcomingAppointments(int GarageID)
         {
             try
@@ -1183,6 +1186,286 @@ namespace GarageService.GarageLib.Services
                 };
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="PremiumID"></param>
+        /// <returns></returns>
+        public async Task<ApiResponse<PremiumOffer>> GetPremiumByID(int PremiumID)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"PremiumOffers/{PremiumID}");
+                var content = await response.Content.ReadAsStringAsync();
+
+                if (response.IsSuccessStatusCode)
+                {
+                    // Parse the response content as clientprofile
+                    var Premium = await response.Content.ReadFromJsonAsync<PremiumOffer>();
+
+                    if (Premium == null) // Handle potential null reference
+                    {
+                        return new ApiResponse<PremiumOffer>
+                        {
+                            IsSuccess = false,
+                            ErrorMessage = "Vehicle not found"
+                        };
+                    }
+
+                    return new ApiResponse<PremiumOffer> { Data = Premium, IsSuccess = true };
+                }
+                else
+                {
+                    return new ApiResponse<PremiumOffer>
+                    {
+                        IsSuccess = false,
+                        ErrorMessage = $"Error: {response.StatusCode}"
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<PremiumOffer>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = ex.Message
+                };
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="GarageID"></param>
+        /// <returns></returns>
+        public async Task<ApiResponse<List<GaragePaymentMethod>>> GetPaymentMethodByID(int GarageID)
+        {
+            try
+            {
+                using var response = await _httpClient.GetAsync($"GaragePaymentMethods/garage/{GarageID}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var paymentMethod = await response.Content.ReadFromJsonAsync<List<GaragePaymentMethod>>();
+                    return new ApiResponse<List<GaragePaymentMethod>> { Data = paymentMethod, IsSuccess = true };
+                }
+
+                // Handle non-success status codes
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                return response.StatusCode switch
+                {
+                    HttpStatusCode.NotFound =>
+                        new ApiResponse<List<GaragePaymentMethod>> { ErrorMessage = "User type not found", IsSuccess = false },
+                    _ =>
+                        new ApiResponse<List<GaragePaymentMethod>> { ErrorMessage = $"Error fetching user type: {response.ReasonPhrase}", IsSuccess = false }
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<List<GaragePaymentMethod>>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = ex.Message
+                };
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Order"></param>
+        /// <returns></returns>
+        public async Task<ApiResponse<GaragePaymentOrder>> AddGaragePaymentOrder(GaragePaymentOrder Order)
+        {
+            try
+            {
+                var json = JsonSerializer.Serialize(Order);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _httpClient.PostAsync("GaragePaymentOrders", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var PaymentOrder = await response.Content.ReadFromJsonAsync<GaragePaymentOrder>();
+                    return new ApiResponse<GaragePaymentOrder>
+                    {
+                        IsSuccess = true,
+                        Data = PaymentOrder,
+                    };
+                }
+                else
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+
+                    // Handle different status codes
+                    if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                    {
+                        throw new Exception($"Validation error: {errorContent}");
+                    }
+                    else if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
+                    {
+                        throw new Exception($"Conflict: {errorContent}");
+                    }
+                    else
+                    {
+                        throw new Exception($"API error: {response.StatusCode} - {errorContent}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error adding Garage: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<ApiResponse<GaragePaymentOrder>> GetPaymentOrderByID(int OrderID)
+        {
+            try
+            {
+                using var response = await _httpClient.GetAsync($"GaragePaymentOrders/{OrderID}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var paymentMethod = await response.Content.ReadFromJsonAsync<GaragePaymentOrder>();
+                    return new ApiResponse<GaragePaymentOrder> { Data = paymentMethod, IsSuccess = true };
+                }
+
+                // Handle non-success status codes
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                return response.StatusCode switch
+                {
+                    HttpStatusCode.NotFound =>
+                        new ApiResponse<GaragePaymentOrder> { ErrorMessage = "User type not found", IsSuccess = false },
+                    _ =>
+                        new ApiResponse<GaragePaymentOrder> { ErrorMessage = $"Error fetching user type: {response.ReasonPhrase}", IsSuccess = false }
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<GaragePaymentOrder>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = ex.Message
+                };
+            }
+        }
+
+        public async Task<bool> UpdateGaragePremiumStatusAsync(int garageId, bool isPremium)
+        {
+            try
+            {
+                var requestUrl = $"GarageProfiles/{garageId}/premium-status";
+
+                // Body should be a JSON boolean, so we serialize `true` or `false`
+                var content = new StringContent(
+                    isPremium.ToString().ToLower(),  // true/false in lowercase JSON format
+                    Encoding.UTF8,
+                    "application/json"
+                );
+
+                var response = await _httpClient.PatchAsync(requestUrl, content);
+
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error updating premium status: {ex.Message}");
+                return false;
+            }
+        }
+        public async Task<bool> UpdateOrderStatusAsync(int orderId, string status)
+        {
+            var requestUrl = $"GaragePaymentOrders/{orderId}/status";
+
+            // Create StringContent for the raw string body (JSON)
+            var content = new StringContent($"\"{status}\"", Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PatchAsync(requestUrl, content);
+
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<bool> UpdatePaymentOrderAsync(int id, GaragePaymentOrder Order)
+        {
+            try
+            {
+                var json = JsonSerializer.Serialize(Order);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _httpClient.PutAsync($"GaragePaymentOrders/{id}", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+
+                    return true;
+                }
+
+                // Handle specific status codes if needed
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    throw new Exception("Garage Order not found");
+                }
+                else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                {
+                    throw new Exception("Invalid request - ID mismatch");
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                // Log error or handle it appropriately
+                Console.WriteLine($"Error updating Garage Order: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<ApiResponse<GaragePremiumRegistration>> AddGaragePremium(GaragePremiumRegistration Order)
+        {
+            try
+            {
+                var json = JsonSerializer.Serialize(Order);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _httpClient.PostAsync("GaragePremiumRegistrations", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var GaragePremium = await response.Content.ReadFromJsonAsync<GaragePremiumRegistration>();
+                    return new ApiResponse<GaragePremiumRegistration>
+                    {
+                        IsSuccess = true,
+                        Data = GaragePremium,
+                    };
+                }
+                else
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+
+                    // Handle different status codes
+                    if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                    {
+                        throw new Exception($"Validation error: {errorContent}");
+                    }
+                    else if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
+                    {
+                        throw new Exception($"Conflict: {errorContent}");
+                    }
+                    else
+                    {
+                        throw new Exception($"API error: {response.StatusCode} - {errorContent}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error adding Garage: {ex.Message}");
+                throw;
+            }
+        }
+
     }
     public class ApiResponse<T>
     {
