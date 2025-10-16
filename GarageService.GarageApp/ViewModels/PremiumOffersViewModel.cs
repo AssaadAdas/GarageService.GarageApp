@@ -20,8 +20,8 @@ namespace GarageService.GarageApp.ViewModels
         public ICommand LoadProfileCommand { get; }
         public ICommand BackCommand { get; }
         public ICommand SelectOfferCommand { get; }
-        public ICommand SubscribeCommand { get; }
-
+        
+        public ICommand SaveCommand { get; }
         private GarageProfile _garageProfile;
         public GarageProfile GarageProfile
         {
@@ -57,8 +57,9 @@ namespace GarageService.GarageApp.ViewModels
             
             BackCommand = new Command(async () => await GoBack());
             LoadProfileCommand = new Command(async () => await LoadProfile());
-            SubscribeCommand = new Command(async () => await SubscribeOrder());
             
+            SaveCommand = new Command(async () => await SubscribeOrder());
+
             LoadProfileCommand.Execute(null);
             LoadPremiumOffersCommand = new Command(async () => await LoadPremiumOffers());
             

@@ -10,7 +10,7 @@
     <Grid RowDefinitions="Auto,*,Auto" Padding="0">
         <!-- Title/Header -->
         <views:TitleView Title="Premium Offers"
-                         SubmitCommand="{Binding SaveCommand}"
+                         SubmitCommand="{Binding SubscribeCommand}"
                          BackCommand="{Binding GoBack}"
                          Grid.Row="0"/>
 
@@ -66,16 +66,6 @@
             </CollectionView>
         </ScrollView>
 
-        <!-- Footer/CTA Button -->
-        <Button Grid.Row="2"
-                Text="Get Premium"
-                Command="{Binding SubscribeCommand}"
-                Margin="24,0,24,24"
-                HeightRequest="54"
-                CornerRadius="27"
-                BackgroundColor="{AppThemeBinding Light=#FF9800, Dark=#FFA726}"
-                TextColor="White"
-                FontAttributes="Bold"
-                FontSize="18"/>
+
     </Grid>
 </ContentPage>
