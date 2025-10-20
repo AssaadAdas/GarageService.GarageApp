@@ -86,12 +86,11 @@
                         <Entry Placeholder="Address" 
                            Text="{Binding Address}"
                            Style="{StaticResource FormEntry}"/>
-                        
-                        <Picker Title="Select Country *"
-                            ItemsSource="{Binding Countries}"
-                            ItemDisplayBinding="{Binding CountryName}"
-                            SelectedItem="{Binding SelectedCountry}"
-                            Style="{StaticResource FormPicker}"/>
+
+                        <Picker ItemsSource="{Binding PaymentTypes}"
+                                ItemDisplayBinding="{Binding PaymentTypeDesc}"
+                                SelectedItem="{Binding selectedPaymentType, Mode=TwoWay}"
+                                Title="Select Payment Type"/>
 
                         <Picker Title="Select Specialization *"
                             ItemsSource="{Binding specializations}"

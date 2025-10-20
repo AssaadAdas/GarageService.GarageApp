@@ -1497,6 +1497,89 @@ namespace GarageService.GarageLib.Services
             }
         }
 
+        public async Task<ApiResponse<List<PaymentType>>> GetPaymentTypesAsync()
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync("PaymentTypes");
+                var content = await response.Content.ReadAsStringAsync();
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var PaymentTypes = await response.Content.ReadFromJsonAsync<List<PaymentType>>();
+                    
+                    return new ApiResponse<List<PaymentType>>
+                    {
+                        IsSuccess = true,
+                        Data = PaymentTypes.OrderBy(c => c.PaymentTypeDesc).ToList(),
+                    };
+                }
+                else
+                {
+                    return new ApiResponse<List<PaymentType>>
+                    {
+                        IsSuccess = false,
+                        ErrorMessage = $"Error: {response.StatusCode} - {content}",
+
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<List<PaymentType>>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = ex.Message,
+
+                };
+            }
+        }
+
+        public async Task<ApiResponse<GaragePaymentMethod>> AddGaragePaymentMethod(GaragePaymentMethod PaymentMethod)
+        {
+            try
+            {
+                var json = JsonSerializer.Serialize(PaymentMethod);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                var response = await _httpClient.PostAsync("GaragePaymentMethods", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var garagePaymentMethod = await response.Content.ReadFromJsonAsync<GaragePaymentMethod>();
+                    return new ApiResponse<GaragePaymentMethod>
+                    {
+                        IsSuccess = true,
+                        Data = garagePaymentMethod,
+                    };
+                }
+                else
+                {
+
+                    var errorContent = await response.Content.ReadAsStringAsync();
+
+                    // Handle different status codes
+                    if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                    {
+                        throw new Exception($"Validation error: {errorContent}");
+                    }
+                    else if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
+                    {
+                        throw new Exception($"Conflict: {errorContent}");
+                    }
+                    else
+                    {
+                        throw new Exception($"API error: {response.StatusCode} - {errorContent}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the exception
+                Console.WriteLine($"Error adding Payment Method: {ex.Message}");
+                throw;
+            }
+        }
+
     }
     public class ApiResponse<T>
     {

@@ -12,6 +12,6 @@ namespace GarageService.GarageLib.Models
 
         public string FuelTypeDesc { get; set; } = null!;
 
-        public virtual ICollection<Vehicle> Vehicles { get; set; } = new List<Vehicle>();
+        public virtual ICollection<Vehicle>? Vehicles { get; set; } = new List<Vehicle>();
     }
 }

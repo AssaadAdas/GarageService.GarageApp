@@ -54,15 +54,11 @@ namespace GarageService.GarageApp.ViewModels
         {
             _ApiService = apiservice;
             _sessionService = sessionService;
-            
             BackCommand = new Command(async () => await GoBack());
             LoadProfileCommand = new Command(async () => await LoadProfile());
-            
             SaveCommand = new Command(async () => await SubscribeOrder());
-
             LoadProfileCommand.Execute(null);
             LoadPremiumOffersCommand = new Command(async () => await LoadPremiumOffers());
-            
         }
         private async Task GoBack()
         {

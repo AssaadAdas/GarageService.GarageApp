@@ -30,9 +30,13 @@ namespace GarageService.GarageApp.ViewModels
             BackCommand = new Command(async () => await GoBack());
             SaveCommand = new Command(async () => await SavePaymentOrder());
             AddPaymentMethodCommand = new Command(async () => await AddPaymentMethodAsync());
+            AddPaymentMethodCommand = new Command(async () => await AddPaymentMethod());
             LoadGarageProfile();
         }
-
+        private async Task AddPaymentMethod()
+        {
+            await Shell.Current.GoToAsync(nameof(GaragePaymentMethodPage));
+        }
         private GaragePaymentMethod _selectedPaymentMethod;
         public GaragePaymentMethod SelectedPaymentMethod
         {

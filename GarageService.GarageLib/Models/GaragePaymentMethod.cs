@@ -12,7 +12,7 @@ namespace GarageService.GarageLib.Models
 
         public int Garageid { get; set; }
 
-        public string PaymentType { get; set; } = null!;
+        public int PaymentTypeId { get; set; }
 
         public bool IsPrimary { get; set; }
 
@@ -32,6 +32,7 @@ namespace GarageService.GarageLib.Models
 
         public string Cvv { get; set; } = null!;
 
+        public virtual PaymentType? PaymentType { get; set; } = null!;
         public virtual GarageProfile? Garage { get; set; } = null!;
     }
 }
