@@ -10,6 +10,10 @@ public partial class TitleView : FlexLayout
             typeof(TitleView),
             string.Empty,
             propertyChanged: OnTitleChanged);
+    public static readonly BindableProperty PremuimCommandProperty = BindableProperty.Create(
+    nameof(PremuimCommand),
+    typeof(ICommand),
+    typeof(TitleView));
 
     public static readonly BindableProperty SubmitCommandProperty = BindableProperty.Create(
         nameof(SubmitCommand),
@@ -41,6 +45,11 @@ public partial class TitleView : FlexLayout
     {
         get => (string)GetValue(TitleProperty);
         set => SetValue(TitleProperty, value);
+    }
+    public ICommand PremuimCommand
+    {
+        get => (ICommand)GetValue(PremuimCommandProperty);
+        set => SetValue(PremuimCommandProperty, value);
     }
 
     public ICommand SubmitCommand
