@@ -33,12 +33,24 @@ public partial class DashBoardTitle : FlexLayout
         typeof(ICommand),
         typeof(DashBoardTitle));
 
+    public static readonly BindableProperty EditProfileCommandProperty = BindableProperty.Create(
+    nameof(PremuimCommand),
+    typeof(ICommand),
+    typeof(DashBoardTitle));
+    //EditProfileCommand
     public static readonly BindableProperty GaragePremiumRegistrationProperty = BindableProperty.Create(
         nameof(GaragePremiumRegistration),
         typeof(GaragePremiumRegistration),
         typeof(DashBoardTitle),
         default(GaragePremiumRegistration),
-        propertyChanged: OnGarageProfileChanged);
+        propertyChanged: OnGaragePremiumRegistrationChanged);
+
+    public static readonly BindableProperty GarageProfileProperty = BindableProperty.Create(
+       nameof(GarageProfile),
+       typeof(GarageProfile),
+       typeof(DashBoardTitle),
+       default(GarageProfile),
+       propertyChanged: OnGarageProfileChanged);
 
     public static readonly BindableProperty BackCommandProperty = BindableProperty.Create(
     nameof(BackCommand),
@@ -77,13 +89,24 @@ public partial class DashBoardTitle : FlexLayout
         get => (ICommand)GetValue(PremuimCommandProperty);
         set => SetValue(PremuimCommandProperty, value);
     }
+    public ICommand EditProfileCommand
+    {
+        get => (ICommand)GetValue(EditProfileCommandProperty);
+        set => SetValue(EditProfileCommandProperty, value);
+    }
 
+    
     public GaragePremiumRegistration GaragePremiumRegistration
     {
         get => (GaragePremiumRegistration)GetValue(GaragePremiumRegistrationProperty);
         set => SetValue(GaragePremiumRegistrationProperty, value);
     }
 
+    public GarageProfile GarageProfile
+    {
+        get => (GarageProfile)GetValue(GaragePremiumRegistrationProperty);
+        set => SetValue(GaragePremiumRegistrationProperty, value);
+    }
     private static void OnTitleChanged(BindableObject bindable, object oldValue, object newValue)
     {
         var control = (DashBoardTitle)bindable;
@@ -95,6 +118,11 @@ public partial class DashBoardTitle : FlexLayout
         var control = (DashBoardTitle)bindable;
         // Optional: Add any logic that should run when IsPremium changes
     }
+    private static void OnGaragePremiumRegistrationChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        // UI is bound directly to GarageProfile via XAML (see DataTriggers). Keep for future logic.
+    }
+
     private static void OnGarageProfileChanged(BindableObject bindable, object oldValue, object newValue)
     {
         // UI is bound directly to GarageProfile via XAML (see DataTriggers). Keep for future logic.
