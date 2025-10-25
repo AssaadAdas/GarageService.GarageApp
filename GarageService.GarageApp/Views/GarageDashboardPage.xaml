@@ -4,7 +4,7 @@
              xmlns:views="clr-namespace:GarageService.GarageApp.Views"
              x:Class="GarageService.GarageApp.Views.GarageDashboardPage"
              x:Name="PageRoot"
-             Title="Garage Dashboard">
+             >
 
     <Grid RowDefinitions="Auto,*,Auto">
         <!-- Header -->
