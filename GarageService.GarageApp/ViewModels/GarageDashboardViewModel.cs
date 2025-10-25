@@ -65,19 +65,6 @@ namespace GarageService.GarageApp.ViewModels
                 }
             }
         }
-        private bool _isChecked =  false;
-        public bool IsChecked
-        {
-            get => _isChecked;
-            set
-            {
-                if (_isChecked != value)
-                {
-                    _isChecked = value;
-                    OnPropertyChanged(nameof(IsChecked));
-                }
-            }
-        }
 
         private string _liscencePlate;
         public string LiscencePlate
@@ -121,7 +108,7 @@ namespace GarageService.GarageApp.ViewModels
 
             if (response.IsSuccess)
             {
-                IsChecked = true;
+                vehicle.IsChecked = true;
                 //btnServices.enabled = true;
                 //btnChecks.enabled = false;
                 WriteClientNotification(vehicle);
@@ -130,7 +117,7 @@ namespace GarageService.GarageApp.ViewModels
             {
                 //btnServices.enabled = false;
                 //btnChecks.enabled = true;
-                IsChecked = false;
+                vehicle.IsChecked = false;
             }
         }
 

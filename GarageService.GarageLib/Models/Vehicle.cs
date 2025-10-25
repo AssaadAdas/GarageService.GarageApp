@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace GarageService.GarageLib.Models
 {
-    public partial class Vehicle
+    public partial class Vehicle: INotifyPropertyChanged
     {
         public int Id { get; set; }
 
@@ -51,5 +53,24 @@ namespace GarageService.GarageLib.Models
         public virtual ICollection<VehiclesRefuel> VehiclesRefuels { get; set; } = new List<VehiclesRefuel>();
 
         public virtual ICollection<VehiclesService> VehiclesServices { get; set; } = new List<VehiclesService>();
+
+        // New: IsChecked with change notification
+        private bool _isChecked;
+        public bool IsChecked
+        {
+            get => _isChecked;
+            set => SetProperty(ref _isChecked, value);
+        }
+
+        // INotifyPropertyChanged implementation
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected bool SetProperty<T>(ref T backingStore, T value, [CallerMemberName] string propertyName = "")
+        {
+            if (EqualityComparer<T>.Default.Equals(backingStore, value)) return false;
+            backingStore = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            return true;
+        }
     }
 }

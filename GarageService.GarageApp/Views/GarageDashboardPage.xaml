@@ -106,17 +106,6 @@
                                                                            VerticalOptions="Center"
                                                                            HorizontalOptions="End"
                                                                            Spacing="12">
-                                                        <Button x:Name="btnServices" 
-                                                                Text="🔧" 
-                                                                Command="{Binding BindingContext.AddServicesCommand, Source={x:Reference PageRoot}}"
-                                                                CommandParameter="{Binding .}"
-                                                                BackgroundColor="Transparent"
-                                                                TextColor="{AppThemeBinding Light=#1976D2, Dark=#90CAF9}"
-                                                                FontSize="16"
-                                                                Padding="0"
-                                                                HeightRequest="36"
-                                                                WidthRequest="36"
-                                                                CornerRadius="18"/>
                                                         <Button x:Name="btnChecks" 
                                                                 Text="⚙️" 
                                                                 Command="{Binding BindingContext.CheckVehicleCommand, Source={x:Reference PageRoot}}"
@@ -128,6 +117,19 @@
                                                                 HeightRequest="36"
                                                                 WidthRequest="36"
                                                                 CornerRadius="18"/>
+                                                        <Button x:Name="btnServices" 
+                                                                Text="🔧" 
+                                                                Command="{Binding BindingContext.AddServicesCommand, Source={x:Reference PageRoot}}"
+                                                                CommandParameter="{Binding .}"
+                                                                BackgroundColor="Transparent"
+                                                                TextColor="{AppThemeBinding Light=#1976D2, Dark=#90CAF9}"
+                                                                FontSize="16"
+                                                                Padding="0"
+                                                                IsEnabled="{Binding IsChecked}"
+                                                                HeightRequest="36"
+                                                                WidthRequest="36"
+                                                                CornerRadius="18"/>
+
                                                     </HorizontalStackLayout>
                                                 </Grid>
                                             </Frame>
