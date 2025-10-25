@@ -170,6 +170,7 @@ namespace GarageService.GarageApp.ViewModels
                 GaragePaymentMethod = response.Data;
             }
         }
+
         public async Task LoadGarageProfile()
         {
             // Get current user ID from your authentication system

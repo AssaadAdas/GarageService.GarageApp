@@ -1315,7 +1315,7 @@ namespace GarageService.GarageLib.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error adding Garage: {ex.Message}");
+                Console.WriteLine($"Error adding Garage Payment Order: {ex.Message}");
                 throw;
             }
         }
@@ -1375,6 +1375,7 @@ namespace GarageService.GarageLib.Services
                 return false;
             }
         }
+       
         public async Task<bool> UpdateOrderStatusAsync(int orderId, string status)
         {
             var requestUrl = $"GaragePaymentOrders/{orderId}/status";
