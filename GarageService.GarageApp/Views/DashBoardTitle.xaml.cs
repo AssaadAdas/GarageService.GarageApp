@@ -26,8 +26,6 @@ public partial class DashBoardTitle : FlexLayout
         typeof(ICommand),
         typeof(DashBoardTitle));
 
-
-
     public static readonly BindableProperty PremuimCommandProperty = BindableProperty.Create(
         nameof(PremuimCommand),
         typeof(ICommand),
@@ -104,8 +102,8 @@ public partial class DashBoardTitle : FlexLayout
 
     public GarageProfile GarageProfile
     {
-        get => (GarageProfile)GetValue(GaragePremiumRegistrationProperty);
-        set => SetValue(GaragePremiumRegistrationProperty, value);
+        get => (GarageProfile)GetValue(GarageProfileProperty);
+        set => SetValue(GarageProfileProperty, value);
     }
     private static void OnTitleChanged(BindableObject bindable, object oldValue, object newValue)
     {
