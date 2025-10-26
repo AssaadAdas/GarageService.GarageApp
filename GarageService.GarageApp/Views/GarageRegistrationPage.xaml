@@ -87,10 +87,10 @@
                            Text="{Binding Address}"
                            Style="{StaticResource FormEntry}"/>
 
-                        <Picker ItemsSource="{Binding PaymentTypes}"
-                                ItemDisplayBinding="{Binding PaymentTypeDesc}"
-                                SelectedItem="{Binding selectedPaymentType, Mode=TwoWay}"
-                                Title="Select Payment Type"/>
+                        <Picker ItemsSource="{Binding Countries}"
+                                ItemDisplayBinding="{Binding CountryName}"
+                                SelectedItem="{Binding SelectedCountry}"
+                                Title="Select Country "/>
 
                         <Picker Title="Select Specialization *"
                             ItemsSource="{Binding specializations}"
