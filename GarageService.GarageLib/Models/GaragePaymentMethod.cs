@@ -34,5 +34,6 @@ namespace GarageService.GarageLib.Models
 
         public virtual PaymentType? PaymentType { get; set; } = null!;
         public virtual GarageProfile? Garage { get; set; } = null!;
+        public virtual ICollection<GaragePaymentOrder>? GaragePaymentOrders { get; set; } = new List<GaragePaymentOrder>();
     }
 }

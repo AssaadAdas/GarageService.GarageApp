@@ -131,6 +131,7 @@ namespace GarageService.GarageApp.ViewModels
                 Debug.WriteLine($"Exception: {ex}");
             }
         }
+       
         private async Task GoBack()
         {
             await Shell.Current.GoToAsync($"..");
