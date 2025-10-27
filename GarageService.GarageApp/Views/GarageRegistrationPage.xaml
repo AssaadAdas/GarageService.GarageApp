@@ -90,6 +90,7 @@
                         <Picker ItemsSource="{Binding Countries}"
                                 ItemDisplayBinding="{Binding CountryName}"
                                 SelectedItem="{Binding SelectedCountry}"
+                                
                                 Title="Select Country "/>
 
                         <Picker Title="Select Specialization *"
