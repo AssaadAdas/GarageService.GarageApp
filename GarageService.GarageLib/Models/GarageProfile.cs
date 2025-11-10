@@ -27,7 +27,8 @@ namespace GarageService.GarageLib.Models
         public int UserId { get; set; }
 
         public bool IsPremium { get; set; }
-        public string GarageLocation { get; set; }
+
+        public string? GarageLocation { get; set; }
 
         public virtual Country? Country { get; set; } = null!;
 

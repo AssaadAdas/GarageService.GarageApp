@@ -1581,6 +1581,39 @@ namespace GarageService.GarageLib.Services
             }
         }
 
+        public async Task<ApiResponse<List<GaragePaymentOrder>>> GetPendingPaymentOrderByID(int GarageId)
+        {
+            try
+            {
+                using var response = await _httpClient.GetAsync($"GaragePaymentOrders/garageStatus/{GarageId}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var PendingpaymentOrder = await response.Content.ReadFromJsonAsync<List<GaragePaymentOrder>>();
+                    return new ApiResponse<List<GaragePaymentOrder>> { Data = PendingpaymentOrder, IsSuccess = true };
+                }
+
+                // Handle non-success status codes
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                return response.StatusCode switch
+                {
+                    HttpStatusCode.NotFound =>
+                        new ApiResponse<List<GaragePaymentOrder>> { ErrorMessage = "User type not found", IsSuccess = false },
+                    _ =>
+                        new ApiResponse<List<GaragePaymentOrder>> { ErrorMessage = $"Error fetching user type: {response.ReasonPhrase}", IsSuccess = false }
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<List<GaragePaymentOrder>>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = ex.Message
+                };
+            }
+        }
+
+
     }
     public class ApiResponse<T>
     {

@@ -49,12 +49,14 @@ public static class MauiProgram
         builder.Services.AddTransient<GaragePaymentOrdersPage>();
         builder.Services.AddTransient<PaymentPage>();
         builder.Services.AddTransient<GaragePaymentMethodPage>();
+        builder.Services.AddSingleton<SettingsMenuPopup>();
         // Services
         builder.Services.AddSingleton<ISessionService, SessionService>();
         builder.Services.AddSingleton<ISecureStorage>(SecureStorage.Default);
         builder.Services.AddSingleton<ApiService>();
         builder.Services.AddSingleton<INavigationService, NavigationService>();
         builder.Services.AddSingleton<ServiceFormState>();
+       
 
 #if DEBUG
         builder.Logging.AddDebug();

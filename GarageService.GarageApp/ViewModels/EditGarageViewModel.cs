@@ -254,6 +254,7 @@ namespace GarageService.GarageApp.ViewModels
             GarageProfile.PhoneNumber = PhoneNumber;
             GarageProfile.CountryId = CountryId;
             GarageProfile.Address = Address;
+            GarageProfile.GarageLocation = null;
             GarageProfile.SpecializationId = SpecializationId;
             bool success = await _ApiService.UpdateGarageProfileAsync(GarageProfile.Id, GarageProfile);
 

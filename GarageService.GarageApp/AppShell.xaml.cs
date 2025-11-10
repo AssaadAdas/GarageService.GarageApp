@@ -19,6 +19,7 @@ namespace GarageService.GarageApp
             Routing.RegisterRoute(nameof(GaragePaymentOrdersPage), typeof(GaragePaymentOrdersPage));
             Routing.RegisterRoute(nameof(PaymentPage), typeof(PaymentPage));
             Routing.RegisterRoute(nameof(GaragePaymentMethodPage), typeof(GaragePaymentMethodPage));
+            Routing.RegisterRoute(nameof(SettingsMenuPopup), typeof(SettingsMenuPopup));
 
 
 

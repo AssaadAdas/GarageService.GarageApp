@@ -226,6 +226,7 @@ namespace GarageService.GarageApp.ViewModels
                 SpecializationId = SpecializationId,
                 IsPremium = false,
                 UserId = user.Id,
+                GarageLocation = null,
                 GaragePaymentMethods = null,
                 GaragePaymentOrders = null,
                 Country = null,
