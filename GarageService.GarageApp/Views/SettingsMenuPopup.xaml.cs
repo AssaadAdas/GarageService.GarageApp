@@ -18,10 +18,10 @@ public partial class SettingsMenuPopup : Popup
     }
     private async Task GoPaymentMethods()
     {
-        //await Shell.Current.GoToAsync($"{nameof(PaymentMethodsPage)}");
+        await Shell.Current.GoToAsync($"{nameof(PaymentMethodsPage)}");
     }
     private async Task ChangePasswordMethodsC()
     {
-        //await Shell.Current.GoToAsync($"{nameof(ChangePasswordPage)}");
+        await Shell.Current.GoToAsync($"{nameof(ChangePasswordPage)}");
     }
 }

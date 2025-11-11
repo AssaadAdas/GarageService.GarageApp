@@ -35,6 +35,8 @@ public static class MauiProgram
         builder.Services.AddTransient<GaragePaymentOrdersViewModel>();
         builder.Services.AddTransient<PaymentViewModel>();
         builder.Services.AddTransient<GaragePaymentMethodViewModel>();
+        builder.Services.AddTransient<PaymentMethodsViewModel>();
+        builder.Services.AddTransient<EditPaymentMethodsViewModel>();
 
         // Register Views
         builder.Services.AddTransient<MainPage>();
@@ -50,6 +52,9 @@ public static class MauiProgram
         builder.Services.AddTransient<PaymentPage>();
         builder.Services.AddTransient<GaragePaymentMethodPage>();
         builder.Services.AddSingleton<SettingsMenuPopup>();
+        builder.Services.AddSingleton<PaymentMethodsPage>();
+        builder.Services.AddSingleton<ChangePasswordPage>();
+        builder.Services.AddSingleton<EditPaymentMethodsPage>();
         // Services
         builder.Services.AddSingleton<ISessionService, SessionService>();
         builder.Services.AddSingleton<ISecureStorage>(SecureStorage.Default);

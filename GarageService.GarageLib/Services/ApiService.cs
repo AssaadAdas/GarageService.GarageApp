@@ -1613,7 +1613,45 @@ namespace GarageService.GarageLib.Services
             }
         }
 
+        public async Task<ApiResponse<GaragePaymentMethod>> GetPaymentMethodID(int MethodID)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"GaragePaymentMethods/UnMask/{MethodID}");
+                var content = await response.Content.ReadAsStringAsync();
 
+                if (response.IsSuccessStatusCode)
+                {
+                    var paymentMethod = await response.Content.ReadFromJsonAsync<GaragePaymentMethod>();
+                    return new ApiResponse<GaragePaymentMethod> { Data = paymentMethod, IsSuccess = true };
+                }
+
+                // Handle non-success status codes
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                return response.StatusCode switch
+                {
+                    HttpStatusCode.NotFound =>
+                        new ApiResponse<GaragePaymentMethod> { ErrorMessage = "Payment Method not found", IsSuccess = false },
+                    _ =>
+                        new ApiResponse<GaragePaymentMethod> { ErrorMessage = $"Error fetching user type: {response.ReasonPhrase}", IsSuccess = false }
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<GaragePaymentMethod>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = ex.Message
+                };
+            }
+        }
+
+        public async Task<bool> UpdatePaymentMethodAsync(int id, GaragePaymentMethod garagePaymentMethod)
+        {
+            var response = await _httpClient.PutAsJsonAsync($"GaragePaymentMethods/{id}", garagePaymentMethod);
+
+            return response.IsSuccessStatusCode; // returns true if 204 or 200
+        }
     }
     public class ApiResponse<T>
     {
