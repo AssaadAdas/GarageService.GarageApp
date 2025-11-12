@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Microsoft.Maui.Maps;
 
 namespace GarageService.GarageApp.ViewModels
 {
@@ -252,7 +253,7 @@ namespace GarageService.GarageApp.ViewModels
             GarageProfile.Email = Email;
             GarageProfile.PhoneExt = PhoneExt;
             GarageProfile.PhoneNumber = PhoneNumber;
-            GarageProfile.CountryId = CountryId;
+            GarageProfile.CountryId = SelectedCountry?.Id ?? CountryId;
             GarageProfile.Address = Address;
             GarageProfile.GarageLocation = null;
             GarageProfile.SpecializationId = SpecializationId;

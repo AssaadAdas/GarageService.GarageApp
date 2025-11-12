@@ -685,7 +685,7 @@ namespace GarageService.GarageLib.Services
                 {
                     throw new Exception("Invalid request - ID mismatch");
                 }
-
+                
                 return false;
             }
             catch (Exception ex)
