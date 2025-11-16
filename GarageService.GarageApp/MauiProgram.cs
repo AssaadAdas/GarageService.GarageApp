@@ -4,6 +4,8 @@ using GarageService.GarageLib.Services;
 using GarageService.GarageApp.Services;
 using GarageService.GarageApp.Views;
 using GarageService.GarageApp.ViewModels;
+using Microsoft.Maui.Controls.Maps;
+using Microsoft.Maui.Maps;
 
 namespace GarageService.GarageApp;
 
@@ -21,6 +23,12 @@ public static class MauiProgram
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
 				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
 			});
+        
+        // Register MAUI Maps handlers (correct API)
+        //builder.ConfigureMauiHandlers(handlers =>
+        //{
+        //    handlers.AddMauiMaps();
+        //});
 
         // register view models
         builder.Services.AddTransient<LoginViewModel>();
@@ -61,7 +69,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<ApiService>();
         builder.Services.AddSingleton<INavigationService, NavigationService>();
         builder.Services.AddSingleton<ServiceFormState>();
-       
+        
 
 #if DEBUG
         builder.Logging.AddDebug();
