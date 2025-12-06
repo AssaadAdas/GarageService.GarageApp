@@ -46,8 +46,8 @@ public static class MauiProgram
         builder.Services.AddTransient<PaymentMethodsViewModel>();
         builder.Services.AddTransient<EditPaymentMethodsViewModel>();
         builder.Services.AddTransient<LastServiceViewModel>();
-        
-        
+        builder.Services.AddTransient<LastServiceTypeViewModel>();
+
 
         // Register Views
         builder.Services.AddTransient<MainPage>();
