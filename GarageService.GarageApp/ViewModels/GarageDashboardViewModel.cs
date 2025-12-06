@@ -25,6 +25,9 @@ namespace GarageService.GarageApp.ViewModels
         public ICommand CheckVehicleCommand { get; }
         public ICommand PremuimCommand { get; }
         public ICommand GoSettingCommand { get; }
+
+        public ICommand LastServiceCommand { get; }
+        public ICommand LastServiceByTypeCommand { get; }
         private readonly INavigationService _navigationService;
         private GarageProfile _garageProfile;
         public GarageProfile GarageProfile
@@ -105,6 +108,10 @@ namespace GarageService.GarageApp.ViewModels
             SearchVehicleCommand = new Command(async () => await SearchVehicleAsync());
             GoSettingCommand = new Command(async () => await GoSettingMethods());
             EditProfileCommand = new Command(async () => await EditProfile());
+
+            LastServiceCommand = new Command<Vehicle>(async (vehicle) => await LastService(vehicle));
+            LastServiceByTypeCommand = new Command<Vehicle>(async (vehicle) => await LastServiceByType(vehicle));
+
             //btnServices.enabled = false;
             LoadGarageProfile();
         }
@@ -113,7 +120,18 @@ namespace GarageService.GarageApp.ViewModels
             int ClientId = GetCurrentUserId();
             var popup = new SettingsMenuPopup();
             await _navigationService.ShowPopupAsync(popup);
+        }
 
+
+        private async Task LastService(Vehicle vehicle)
+        {
+            await Shell.Current.GoToAsync($"{nameof(LastServicePage)}?vehicleid={vehicle.Id}");
+        }
+
+        private async Task LastServiceByType(Vehicle vehicle)
+        {
+            await Shell.Current.GoToAsync($"{nameof(LastServiceTypePage)}?vehicleid={vehicle.Id}");
+            
         }
         private async Task AddServices(Vehicle vehicle)
         {

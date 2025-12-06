@@ -1652,6 +1652,160 @@ namespace GarageService.GarageLib.Services
 
             return response.IsSuccessStatusCode; // returns true if 204 or 200
         }
+
+        public async Task<ApiResponse<VehiclesService>> GetVehicleLastService(int vehicleId)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"VehiclesServices/vehicle/{vehicleId}/last");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+
+                    if (response.StatusCode == System.Net.HttpStatusCode.NoContent ||
+                        string.IsNullOrEmpty(responseContent))
+                    {
+                        return new ApiResponse<VehiclesService>
+                        {
+                            IsSuccess = true,
+                            Data = null,
+                            ErrorMessage = null
+                        };
+                    }
+
+                    var vehicleService = JsonSerializer.Deserialize<VehiclesService>(responseContent, new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
+
+                    return new ApiResponse<VehiclesService>
+                    {
+                        IsSuccess = true,
+                        Data = vehicleService,
+                        ErrorMessage = null
+                    };
+                }
+                else
+                {
+                    string errorMessage = response.StatusCode switch
+                    {
+                        System.Net.HttpStatusCode.NotFound => "Vehicle or service record not found",
+                        System.Net.HttpStatusCode.Unauthorized => "Authentication required",
+                        System.Net.HttpStatusCode.BadRequest => "Invalid request",
+                        _ => $"API error: {response.StatusCode}"
+                    };
+
+                    return new ApiResponse<VehiclesService>
+                    {
+                        IsSuccess = false,
+                        Data = default,
+                        ErrorMessage = errorMessage
+                    };
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                return new ApiResponse<VehiclesService>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = $"Network error: {ex.Message}"
+                };
+            }
+            catch (JsonException ex)
+            {
+                return new ApiResponse<VehiclesService>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = $"Data parsing error: {ex.Message}"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<VehiclesService>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = $"Unexpected error: {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<ApiResponse<VehiclesService>> GetVehicleLastServiceByType(int vehicleId, int serviceTypeId)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"VehiclesServices/vehicle/{vehicleId}/service-type/{serviceTypeId}/last");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+
+                    if (response.StatusCode == System.Net.HttpStatusCode.NoContent ||
+                        string.IsNullOrEmpty(responseContent))
+                    {
+                        return new ApiResponse<VehiclesService>
+                        {
+                            IsSuccess = true,
+                            Data = null,
+                            ErrorMessage = null
+                        };
+                    }
+
+                    var vehicleService = JsonSerializer.Deserialize<VehiclesService>(responseContent, new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
+
+                    return new ApiResponse<VehiclesService>
+                    {
+                        IsSuccess = true,
+                        Data = vehicleService,
+                        ErrorMessage = null
+                    };
+                }
+                else
+                {
+                    string errorMessage = response.StatusCode switch
+                    {
+                        System.Net.HttpStatusCode.NotFound => "Vehicle or service record not found",
+                        System.Net.HttpStatusCode.Unauthorized => "Authentication required",
+                        System.Net.HttpStatusCode.BadRequest => "Invalid request",
+                        _ => $"API error: {response.StatusCode}"
+                    };
+
+                    return new ApiResponse<VehiclesService>
+                    {
+                        IsSuccess = false,
+                        Data = default,
+                        ErrorMessage = errorMessage
+                    };
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                return new ApiResponse<VehiclesService>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = $"Network error: {ex.Message}"
+                };
+            }
+            catch (JsonException ex)
+            {
+                return new ApiResponse<VehiclesService>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = $"Data parsing error: {ex.Message}"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<VehiclesService>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = $"Unexpected error: {ex.Message}"
+                };
+            }
+        }
     }
     public class ApiResponse<T>
     {

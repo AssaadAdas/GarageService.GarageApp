@@ -280,7 +280,7 @@ namespace GarageService.GarageApp.ViewModels
             {
                 ServiceDate = ServiceDate,
                 Odometer = Odometer,
-                ServiceLocation = string.Empty,
+                ServiceLocation = GarageProfile.GarageLocation,
                 Notes = Notes,
                 Garageid = GarageProfile.Id,
                 Vehicleid = VehicleId,

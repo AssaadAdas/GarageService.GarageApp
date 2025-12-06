@@ -129,6 +129,28 @@
                                                                 HeightRequest="36"
                                                                 WidthRequest="36"
                                                                 CornerRadius="18"/>
+                                                        <Button x:Name="btnLastServices" 
+                                                                Text="📜" 
+                                                                Command="{Binding BindingContext.LastServiceCommand, Source={x:Reference PageRoot}}"
+                                                                CommandParameter="{Binding .}"
+                                                                BackgroundColor="Transparent"
+                                                                TextColor="{AppThemeBinding Light=#1976D2, Dark=#90CAF9}"
+                                                                FontSize="16"
+                                                                Padding="0"
+                                                                HeightRequest="36"
+                                                                WidthRequest="36"
+                                                                CornerRadius="18"/>
+                                                        <Button x:Name="btnLastServicesByTypes" 
+                                                                Text="📜" 
+                                                                Command="{Binding BindingContext.LastServiceByTypeCommand, Source={x:Reference PageRoot}}"
+                                                                CommandParameter="{Binding .}"
+                                                                BackgroundColor="Transparent"
+                                                                TextColor="{AppThemeBinding Light=#1976D2, Dark=#90CAF9}"
+                                                                FontSize="16"
+                                                                Padding="0"
+                                                                HeightRequest="36"
+                                                                WidthRequest="36"
+                                                                CornerRadius="18"/>
 
                                                     </HorizontalStackLayout>
                                                 </Grid>
@@ -294,64 +316,7 @@
                   ColumnSpacing="0"
                   Padding="16,12,16,24"
                   HeightRequest="80">
-
-                <!-- Dashboard Tab -->
-                <Border Grid.Column="0"
-                        BackgroundColor="Transparent"
-                        Padding="8"
-                        HorizontalOptions="Center">
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding NavigateToDashboardCommand}"/>
-                    </Border.GestureRecognizers>
-                    <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
-                        <Label Text="🏠" 
-                               FontSize="20"
-                               HorizontalOptions="Center"/>
-                        <Label Text="Dashboard"
-                               FontSize="12"
-                               TextColor="{AppThemeBinding Light=#2563EB, Dark=#60A5FA}"
-                               HorizontalOptions="Center"/>
-                    </VerticalStackLayout>
-                </Border>
-
-                <!-- Vehicles Tab -->
-                <Border Grid.Column="1"
-                        BackgroundColor="Transparent"
-                        Padding="8"
-                        HorizontalOptions="Center">
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding NavigateToVehiclesCommand}"/>
-                    </Border.GestureRecognizers>
-                    <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
-                        <Label Text="🚗" 
-                               FontSize="20"
-                               HorizontalOptions="Center"/>
-                        <Label Text="Vehicles"
-                               FontSize="12"
-                               TextColor="{AppThemeBinding Light=#64748B, Dark=#A1A1AA}"
-                               HorizontalOptions="Center"/>
-                    </VerticalStackLayout>
-                </Border>
-
-                <!-- Appointments Tab -->
-                <Border Grid.Column="2"
-                        BackgroundColor="Transparent"
-                        Padding="8"
-                        HorizontalOptions="Center">
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding NavigateToAppointmentsCommand}"/>
-                    </Border.GestureRecognizers>
-                    <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
-                        <Label Text="📅" 
-                               FontSize="20"
-                               HorizontalOptions="Center"/>
-                        <Label Text="Appointments"
-                               FontSize="12"
-                               TextColor="{AppThemeBinding Light=#64748B, Dark=#A1A1AA}"
-                               HorizontalOptions="Center"/>
-                    </VerticalStackLayout>
-                </Border>
-
+              
                 <!-- Settings Tab -->
                 <Border Grid.Column="3"
                         BackgroundColor="Transparent"
