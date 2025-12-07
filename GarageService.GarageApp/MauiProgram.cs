@@ -1,11 +1,12 @@
-﻿using Microsoft.Extensions.Logging;
-using CommunityToolkit.Maui;
-using GarageService.GarageLib.Services;
+﻿using CommunityToolkit.Maui;
 using GarageService.GarageApp.Services;
-using GarageService.GarageApp.Views;
 using GarageService.GarageApp.ViewModels;
+using GarageService.GarageApp.Views;
+using GarageService.GarageLib.Services;
+using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Controls.Maps;
 using Microsoft.Maui.Maps;
+using Syncfusion.Maui.Core.Hosting;
 
 namespace GarageService.GarageApp;
 
@@ -18,6 +19,7 @@ public static class MauiProgram
         builder.UseMauiCommunityToolkit();
         builder
 			.UseMauiApp<App>()
+            .ConfigureSyncfusionCore()
             .ConfigureFonts(fonts =>
 			{
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
