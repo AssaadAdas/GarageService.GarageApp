@@ -63,19 +63,15 @@
                          TextColor="{StaticResource Primary}"/>
 
                     <CollectionView ItemsSource="{Binding ServiceTypess}"
-                                 SelectionMode="None"
-                                 ItemsUpdatingScrollMode="KeepScrollOffset">
+                                 SelectionMode="None">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <Border Padding="15"
+                                <Frame Padding="15"
                                      Margin="0,0,0,10"
                                      BackgroundColor="White"
-                                     StrokeShape="RoundRectangle 10"
-                                     Stroke="Transparent">
-                                    <Border.Shadow>
-                                        <Shadow Brush="Black" Offset="0,2" Radius="6" Opacity="0.1"/>
-                                    </Border.Shadow>
-                                    <Grid ColumnDefinitions="Auto,*,Auto,*,Auto,*" ColumnSpacing="8">
+                                     CornerRadius="10"
+                                     HasShadow="True">
+                                    <Grid ColumnDefinitions="Auto,*,Auto,*,Auto,*">
                                         <Label Text="Type:" 
                                              FontAttributes="Bold"
                                              Grid.Column="0"/>
@@ -94,7 +90,7 @@
                                         <Label Text="{Binding CurrDesc}"
                                              Grid.Column="5"/>
                                     </Grid>
-                                </Border>
+                                </Frame>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>

@@ -1,7 +1,5 @@
 using GarageService.GarageLib.Models;
 using GarageService.GarageLib.Services;
-using GarageService.GarageApp.Views;
-using Microsoft.Maui.Devices.Sensors;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -102,36 +100,17 @@ namespace GarageService.GarageApp.ViewModels
             set => SetProperty(ref _errorMessage, value);
         }
 
-        private string _garageLocation;
-        public string GarageLocation
-        {
-            get => _garageLocation;
-            set => SetProperty(ref _garageLocation, value);
-        }
-
         public ICommand SaveCommand { get; }
         public ICommand BackCommand { get; }
-        public ICommand OpenMapCommand { get; }
 
         public GarageRegistrationViewModel(ApiService apiservice)
         {
             _ApiService = apiservice;
             SaveCommand = new Command(async () => await Register());
             BackCommand = new Command(async () => await GoBack());
-            OpenMapCommand = new Command(async () => await OpenMap());
             LoadCountries();
             LoadSpecializations();
 
-            MessagingCenter.Subscribe<MapPickerPage, Location>(this, "LocationSelected", (sender, location) =>
-            {
-                GarageLocation = $"{location.Latitude},{location.Longitude}";
-                OnPropertyChanged(nameof(GarageLocation));
-            });
-        }
-
-        private async Task OpenMap()
-        {
-            await Shell.Current.Navigation.PushAsync(new MapPickerPage());
         }
         private async Task GoBack()
         {
@@ -247,7 +226,7 @@ namespace GarageService.GarageApp.ViewModels
                 SpecializationId = SpecializationId,
                 IsPremium = false,
                 UserId = user.Id,
-                GarageLocation = GarageLocation,
+                GarageLocation = null,
                 GaragePaymentMethods = null,
                 GaragePaymentOrders = null,
                 Country = null,

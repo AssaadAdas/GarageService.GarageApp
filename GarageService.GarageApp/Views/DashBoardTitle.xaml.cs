@@ -3,7 +3,7 @@ using System.Windows.Input;
 
 namespace GarageService.GarageApp.Views;
 
-public partial class DashBoardTitle : Grid
+public partial class DashBoardTitle : FlexLayout
 {
     public static readonly BindableProperty TitleProperty = BindableProperty.Create(
             nameof(Title),

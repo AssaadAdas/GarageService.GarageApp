@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:views="clr-namespace:GarageService.GarageApp.Views"
-             xmlns:inputs="clr-namespace:Syncfusion.Maui.Inputs;assembly=Syncfusion.Maui.Inputs"
              x:Class="GarageService.GarageApp.Views.RegisterClientVehiclePage"
+             xmlns:views="clr-namespace:GarageService.GarageApp.Views"
+             
              BackgroundColor="{AppThemeBinding Light=#F5F7FA, Dark=#121212}">
 
     <ContentPage.Resources>
@@ -195,13 +195,11 @@
                                     <Label Text="Country" Style="{StaticResource FormLabel}"/>
                                     <Label Style="{StaticResource RequiredIndicator}"/>
                                 </HorizontalStackLayout>
-                                <inputs:SfComboBox Placeholder="Select Country"
-                                                 ItemsSource="{Binding Countries}"
-                                                 DisplayMemberPath="DisplayName"
-                                                 TextMemberPath="DisplayName"
-                                                 SelectedItem="{Binding SelectedCountry}"
-                                                 IsFilteringEnabled="True"
-                                                 IsEditable="True"/>
+                                <Picker 
+                                        ItemsSource="{Binding Countries}"
+                                        ItemDisplayBinding="{Binding CountryName}"
+                                        SelectedItem="{Binding SelectedCountry}"
+                                        Style="{StaticResource FormPicker}"/>
                             </VerticalStackLayout>
                         </Grid>
                     </VerticalStackLayout>
@@ -283,13 +281,11 @@
                                     <Label Text="Vehicle Type" Style="{StaticResource FormLabel}"/>
                                     <Label Style="{StaticResource RequiredIndicator}"/>
                                 </HorizontalStackLayout>
-                                <inputs:SfComboBox Placeholder="Select Vehicle Type"
-                                                 ItemsSource="{Binding vehicletypes}"
-                                                 DisplayMemberPath="VehicleTypesDesc"
-                                                 TextMemberPath="VehicleTypesDesc"
-                                                 SelectedItem="{Binding SelectedVehicleType}"
-                                                 IsFilteringEnabled="True"
-                                                 IsEditable="True"/>
+                                <Picker 
+                                        ItemsSource="{Binding vehicletypes}"
+                                        ItemDisplayBinding="{Binding VehicleTypesDesc}"
+                                        SelectedItem="{Binding SelectedVehicleType}"
+                                        Style="{StaticResource FormPicker}"/>
                             </VerticalStackLayout>
 
                             <!-- Manufacturer -->
@@ -298,13 +294,11 @@
                                     <Label Text="Manufacturer" Style="{StaticResource FormLabel}"/>
                                     <Label Style="{StaticResource RequiredIndicator}"/>
                                 </HorizontalStackLayout>
-                                <inputs:SfComboBox Placeholder="Select Manufacturer"
-                                                 ItemsSource="{Binding manufacturers}"
-                                                 DisplayMemberPath="ManufacturerDesc"
-                                                 TextMemberPath="ManufacturerDesc"
-                                                 SelectedItem="{Binding SelectedManufacturer}"
-                                                 IsFilteringEnabled="True"
-                                                 IsEditable="True"/>
+                                <Picker 
+                                        ItemsSource="{Binding manufacturers}"
+                                        ItemDisplayBinding="{Binding ManufacturerDesc}"
+                                        SelectedItem="{Binding SelectedManufacturer}"
+                                        Style="{StaticResource FormPicker}"/>
                             </VerticalStackLayout>
 
                             <!-- Fuel Type -->
@@ -313,13 +307,11 @@
                                     <Label Text="Fuel Type" Style="{StaticResource FormLabel}"/>
                                     <Label Style="{StaticResource RequiredIndicator}"/>
                                 </HorizontalStackLayout>
-                                <inputs:SfComboBox Placeholder="Select Fuel Type"
-                                                 ItemsSource="{Binding fueltypes}"
-                                                 DisplayMemberPath="FuelTypeDesc"
-                                                 TextMemberPath="FuelTypeDesc"
-                                                 SelectedItem="{Binding Selectedfueltype}"
-                                                 IsFilteringEnabled="True"
-                                                 IsEditable="True"/>
+                                <Picker 
+                                        ItemsSource="{Binding fueltypes}"
+                                        ItemDisplayBinding="{Binding FuelTypeDesc}"
+                                        SelectedItem="{Binding Selectedfueltype}"
+                                        Style="{StaticResource FormPicker}"/>
                             </VerticalStackLayout>
 
                             <!-- Measure Units -->
@@ -328,13 +320,11 @@
                                     <Label Text="Measure Units" Style="{StaticResource FormLabel}"/>
                                     <Label Style="{StaticResource RequiredIndicator}"/>
                                 </HorizontalStackLayout>
-                                <inputs:SfComboBox Placeholder="Select Units"
-                                                 ItemsSource="{Binding meassureunits}"
-                                                 DisplayMemberPath="MeassureUnitDesc"
-                                                 TextMemberPath="MeassureUnitDesc"
-                                                 SelectedItem="{Binding selectedmeassureunit}"
-                                                 IsFilteringEnabled="True"
-                                                 IsEditable="True"/>
+                                <Picker 
+                                        ItemsSource="{Binding meassureunits}"
+                                        ItemDisplayBinding="{Binding MeassureUnitDesc}"
+                                        SelectedItem="{Binding selectedmeassureunit}"
+                                        Style="{StaticResource FormPicker}"/>
                             </VerticalStackLayout>
 
                             <!-- Model -->

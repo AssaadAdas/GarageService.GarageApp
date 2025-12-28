@@ -169,20 +169,6 @@
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}" />
     </Style>
 
-    <!-- Optimized Shadow for reuse -->
-    <Shadow x:Key="ShadowLight" Brush="Black" Offset="0,2" Radius="6" Opacity="0.1"/>
-    <Shadow x:Key="ShadowMedium" Brush="Black" Offset="0,4" Radius="12" Opacity="0.15"/>
-
-    <!-- Modern Card Border Style -->
-    <Style x:Key="ModernCardBorder" TargetType="Border">
-        <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray500}}" />
-        <Setter Property="StrokeThickness" Value="1" />
-        <Setter Property="StrokeShape" Value="RoundRectangle 12" />
-        <Setter Property="Padding" Value="16" />
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}" />
-        <Setter Property="Shadow" Value="{StaticResource ShadowLight}" />
-    </Style>
-
     <Style TargetType="ImageButton">
         <Setter Property="Opacity" Value="1" />
         <Setter Property="BorderColor" Value="Transparent"/>

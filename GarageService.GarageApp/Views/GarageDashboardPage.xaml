@@ -70,8 +70,7 @@
                                 </Grid>
 
                                 <CollectionView ItemsSource="{Binding Vehicles}"   
-                                                EmptyView="No vehicles registered"
-                                                ItemsUpdatingScrollMode="KeepScrollOffset">
+                                                EmptyView="No vehicles registered">
                                     <CollectionView.ItemTemplate>
                                         <DataTemplate>
                                             <Frame CornerRadius="12"   
@@ -180,8 +179,7 @@
 
                                 <CollectionView ItemsSource="{Binding UpcomingVehicleAppointments}" 
                                                 SelectionMode="Single"
-                                                EmptyView="No upcoming Appointments"
-                                                ItemsUpdatingScrollMode="KeepScrollOffset">
+                                                EmptyView="No upcoming Appointments">
                                     <CollectionView.ItemTemplate>
                                         <DataTemplate>
                                             <Frame CornerRadius="12"   
@@ -246,8 +244,7 @@
                                            TextColor="{AppThemeBinding Light=#333333, Dark=White}"
                                            HorizontalOptions="Start"/>
                                 <CollectionView ItemsSource="{Binding PendingOrders}"   
-                                                EmptyView="No Pending Orders"
-                                                ItemsUpdatingScrollMode="KeepScrollOffset">
+                                                EmptyView="No Pending Orders">
                                     <CollectionView.ItemTemplate>
                                         <DataTemplate>
                                             <Frame CornerRadius="12"   

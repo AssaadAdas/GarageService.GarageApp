@@ -3,8 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="GarageService.GarageApp.GaragePaymentMethodPage"
              xmlns:views="clr-namespace:GarageService.GarageApp.Views"
-             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             xmlns:inputs="clr-namespace:Syncfusion.Maui.Inputs;assembly=Syncfusion.Maui.Inputs">
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit">
 
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -119,27 +118,23 @@
 
                             <!-- Expiry Month -->
                             <VerticalStackLayout Grid.Column="0" Spacing="8">
-                                <inputs:SfComboBox 
+                                <Picker 
                                         ItemsSource="{Binding Months}"
                                         SelectedItem="{Binding ExpiryMonth}"
-                                        Placeholder="Month"
-                                        IsFilteringEnabled="True"
-                                        IsEditable="True"/>
+                                        Style="{StaticResource ModernPicker}"/>
                             </VerticalStackLayout>
 
                             <!-- Expiry Year -->
                             <VerticalStackLayout Grid.Column="1" Spacing="8">
-                                <inputs:SfComboBox 
+                                <Picker 
                                         ItemsSource="{Binding Years}"
                                         SelectedItem="{Binding ExpiryYear}"
-                                        Placeholder="Year"
-                                        IsFilteringEnabled="True"
-                                        IsEditable="True"/>
+                                        Style="{StaticResource ModernPicker}"/>
                             </VerticalStackLayout>
 
                             <!-- CVV -->
                             <VerticalStackLayout Grid.Column="2" Spacing="8">
-                                <Entry Placeholder="CVV" 
+                                <Entry Placeholder="123" 
                                        Text="{Binding Cvv}"
                                        Style="{StaticResource ModernEntry}"
                                        Keyboard="Numeric"
@@ -150,14 +145,11 @@
 
                         <!-- Payment Type -->
                         <VerticalStackLayout Spacing="8">
-                            <inputs:SfComboBox 
+                            <Picker 
                                     ItemsSource="{Binding PaymentTypes}"
-                                    DisplayMemberPath="PaymentTypeDesc"
-                                    TextMemberPath="PaymentTypeDesc"
+                                    ItemDisplayBinding="{Binding PaymentTypeDesc}"
                                     SelectedItem="{Binding SelectedPaymentType}"
-                                    Placeholder="Select Payment Type"
-                                    IsFilteringEnabled="True"
-                                    IsEditable="True"/>
+                                    Style="{StaticResource ModernPicker}"/>
                         </VerticalStackLayout>
                         <!-- Remember Me & Forgot Password -->
                         <Grid ColumnDefinitions="*,*" RowDefinitions="auto">

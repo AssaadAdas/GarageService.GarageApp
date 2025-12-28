@@ -25,6 +25,7 @@ namespace GarageService.GarageApp
             Routing.RegisterRoute(nameof(EditPaymentMethodsPage), typeof(EditPaymentMethodsPage));
             Routing.RegisterRoute(nameof(LastServicePage), typeof(LastServicePage));
             Routing.RegisterRoute(nameof(LastServiceTypePage), typeof(LastServiceTypePage));
+            Routing.RegisterRoute(nameof(MapPickerPage), typeof(MapPickerPage));
             
 
 

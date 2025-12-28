@@ -1,7 +1,5 @@
 using GarageService.GarageLib.Models;
 using GarageService.GarageLib.Services;
-using GarageService.GarageApp.Views;
-using Microsoft.Maui.Devices.Sensors;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -35,7 +33,7 @@ namespace GarageService.GarageApp.ViewModels
         public ICommand LoadCommand { get; }
         public ICommand LoadCountriesCommand { get; }
         public ICommand BackCommand { get; }
-        public ICommand OpenMapCommand { get; }
+        public ICommand GetCurrentLocationCommand { get; }
         public string GarageName { get; set; }
         public string Address { get; set; }
         private int _selectedCountryId;
@@ -113,6 +111,21 @@ namespace GarageService.GarageApp.ViewModels
             }
         }
 
+        // Location properties
+        private double _selectedLatitude;
+        public double SelectedLatitude
+        {
+            get => _selectedLatitude;
+            set => SetProperty(ref _selectedLatitude, value);
+        }
+
+        private double _selectedLongitude;
+        public double SelectedLongitude
+        {
+            get => _selectedLongitude;
+            set => SetProperty(ref _selectedLongitude, value);
+        }
+
         private string _garageLocation;
         public string GarageLocation
         {
@@ -133,27 +146,71 @@ namespace GarageService.GarageApp.ViewModels
             _sessionService = sessionService;
             SaveCommand = new Command(async () => await Register());
             BackCommand = new Command(async () => await GoBack());
-            OpenMapCommand = new Command(async () => await OpenMap());
+            GetCurrentLocationCommand = new Command(async () => await UseCurrentLocationAsync());
             LoadCountries();
             LoadSpecializations();
             LoadCommand = new Command(async () => await LoadProfile());
             LoadCommand.Execute(null);
-
-            MessagingCenter.Subscribe<MapPickerPage, Location>(this, "LocationSelected", (sender, location) =>
-            {
-                GarageLocation = $"{location.Latitude},{location.Longitude}";
-                OnPropertyChanged(nameof(GarageLocation));
-            });
-        }
-
-        private async Task OpenMap()
-        {
-            await Shell.Current.Navigation.PushAsync(new MapPickerPage());
         }
 
         private async Task GoBack()
         {
             await Shell.Current.GoToAsync($"..");
+        }
+        public void SetSelectedLocation(double lat, double lng)
+        {
+            SelectedLatitude = lat;
+            SelectedLongitude = lng;
+            _ = ReverseGeocodeAsync(lat, lng);
+        }
+
+        private async Task ReverseGeocodeAsync(double lat, double lng)
+        {
+            try
+            {
+                var placemarks = await Geocoding.Default.GetPlacemarksAsync(lat, lng);
+                var place = placemarks?.FirstOrDefault();
+                if (place != null)
+                {
+                    GarageLocation = $"{lat},{lng}"; // store as "lat,lng"
+                    // you can also store human readable address in a separate field if needed
+                    Address = string.IsNullOrWhiteSpace(place.Thoroughfare) ? Address : $"{place.Thoroughfare} {place.SubThoroughfare}, {place.Locality}";
+                    OnPropertyChanged(nameof(Address));
+                }
+                else
+                {
+                    GarageLocation = $"{lat},{lng}";
+                }
+            }
+            catch (Exception ex)
+            {
+                GarageLocation = $"{lat},{lng}";
+                Debug.WriteLine(ex);
+            }
+        }
+
+        private async Task UseCurrentLocationAsync()
+        {
+            try
+            {
+                var status = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
+                if (status != PermissionStatus.Granted)
+                {
+                    await Application.Current.MainPage.DisplayAlert("Permission required", "Location permission is required", "OK");
+                    return;
+                }
+
+                var request = new GeolocationRequest(GeolocationAccuracy.Best, TimeSpan.FromSeconds(10));
+                var location = await Geolocation.Default.GetLocationAsync(request);
+                if (location == null) return;
+
+                SetSelectedLocation(location.Latitude, location.Longitude);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+                await Application.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
+            }
         }
 
         private async void LoadCountries()
@@ -247,7 +304,6 @@ namespace GarageService.GarageApp.ViewModels
                     SelectedCountry = Countries?.FirstOrDefault(c => c.Id == CountryId);
                     SpecializationId= GarageProfile.SpecializationId;
                     Selectedspecialization = specializations?.FirstOrDefault(c => c.Id == SpecializationId);
-                    GarageLocation = GarageProfile.GarageLocation;
 
                     OnPropertyChanged(nameof(GarageName));
                     OnPropertyChanged(nameof(Email));

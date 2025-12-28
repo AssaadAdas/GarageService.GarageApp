@@ -91,7 +91,7 @@
                         <!-- Payment Methods List -->
                         <CollectionView ItemsSource="{Binding GaragePaymentMethod}"
                                 SelectionMode="None"
-                                ItemsUpdatingScrollMode="KeepScrollOffset">
+                                >
                             <CollectionView.EmptyView>
                                 <VerticalStackLayout HorizontalOptions="Center" 
                                               VerticalOptions="Center" 
