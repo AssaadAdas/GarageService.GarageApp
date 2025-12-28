@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="GarageService.GarageApp.Views.AddServiceTypePage"
              xmlns:views="clr-namespace:GarageService.GarageApp.Views"
+             xmlns:inputs="clr-namespace:Syncfusion.Maui.Inputs;assembly=Syncfusion.Maui.Inputs"
              x:Name="AddType"
              >
     <Grid RowDefinitions="Auto,*">
@@ -15,7 +16,7 @@
             <CollectionView x:Name="ServiceTypesCollection"
                       ItemsSource="{Binding AvailableServiceTypes}"
                       SelectionMode="Multiple"
-                      >
+                      ItemsUpdatingScrollMode="KeepScrollOffset">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Frame Padding="12" Margin="0,0,0,10" BackgroundColor="White" CornerRadius="8">
@@ -54,13 +55,16 @@
                                  VerticalOptions="Center"
                                  HorizontalOptions="Fill"/>
 
-                                <!-- Currency Picker -->
-                                <Picker Grid.Column="3"
-                                  ItemsSource="{Binding BindingContext.Currencies, Source={x:Reference ServiceTypesCollection}}"
-                                  ItemDisplayBinding="{Binding CurrDesc}"
-                                  SelectedItem="{Binding SelectedCurrency, Mode=TwoWay}"
-                                  VerticalOptions="Center"
-                                  HorizontalOptions="Fill"/>
+                                <!-- Currency ComboBox -->
+                                <inputs:SfComboBox Grid.Column="3"
+                                                 ItemsSource="{Binding BindingContext.Currencies, Source={x:Reference ServiceTypesCollection}}"
+                                                 DisplayMemberPath="CurrDesc"
+                                                 TextMemberPath="CurrDesc"
+                                                 SelectedItem="{Binding SelectedCurrency, Mode=TwoWay}"
+                                                 VerticalOptions="Center"
+                                                 HorizontalOptions="Fill"
+                                                 IsFilteringEnabled="True"
+                                                 IsEditable="True"/>
 
                                 <!-- Notes Editor -->
                                 <Editor Grid.Column="4"

@@ -18,7 +18,8 @@
         <ScrollView Grid.Row="1">
             <CollectionView ItemsSource="{Binding PremiumOffers}"
                             EmptyView="No premium offers registered"
-                            Margin="0,16,0,16">
+                            Margin="0,16,0,16"
+                            ItemsUpdatingScrollMode="KeepScrollOffset">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Frame CornerRadius="18"

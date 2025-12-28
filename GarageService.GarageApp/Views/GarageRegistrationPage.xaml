@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:views="clr-namespace:GarageService.GarageApp.Views"
+             xmlns:inputs="clr-namespace:Syncfusion.Maui.Inputs;assembly=Syncfusion.Maui.Inputs"
              x:Class="GarageService.GarageApp.Views.GarageRegistrationPage"
              >
     <Grid RowDefinitions="Auto,*">
@@ -87,17 +88,46 @@
                            Text="{Binding Address}"
                            Style="{StaticResource FormEntry}"/>
 
-                        <Picker ItemsSource="{Binding Countries}"
-                                ItemDisplayBinding="{Binding CountryName}"
-                                SelectedItem="{Binding SelectedCountry}"
-                                
-                                Title="Select Country "/>
+                        <Label Text="Country *" 
+                               FontAttributes="Bold"
+                               TextColor="{DynamicResource LabelTextColor}"/>
+                        <inputs:SfComboBox Placeholder="Select Country *"
+                                         ItemsSource="{Binding Countries}"
+                                         DisplayMemberPath="CountryName"
+                                         TextMemberPath="CountryName"
+                                         SelectedItem="{Binding SelectedCountry}"
+                                         IsFilteringEnabled="True"
+                                         IsEditable="True"/>
 
-                        <Picker Title="Select Specialization *"
-                            ItemsSource="{Binding specializations}"
-                            ItemDisplayBinding="{Binding SpecializationDesc}"
-                            SelectedItem="{Binding Selectedspecialization}"
-                            Style="{StaticResource FormPicker}"/>
+                        <Label Text="Specialization *" 
+                               FontAttributes="Bold"
+                               TextColor="{DynamicResource LabelTextColor}"/>
+                        <inputs:SfComboBox Placeholder="Select Specialization *"
+                                         ItemsSource="{Binding specializations}"
+                                         DisplayMemberPath="SpecializationDesc"
+                                         TextMemberPath="SpecializationDesc"
+                                         SelectedItem="{Binding Selectedspecialization}"
+                                         IsFilteringEnabled="True"
+                                         IsEditable="True"/>
+
+                        <!-- Location Section -->
+                        <Label Text="Location *" 
+                               FontAttributes="Bold"
+                               TextColor="{DynamicResource LabelTextColor}"
+                               Margin="0,10,0,0"/>
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                            <Entry Placeholder="Coordinates (Lat, Lng)" 
+                                   Text="{Binding GarageLocation}"
+                                   Style="{StaticResource FormEntry}"
+                                   IsReadOnly="True"/>
+                            <Button Grid.Column="1"
+                                    Text="Select on Map"
+                                    Command="{Binding OpenMapCommand}"
+                                    BackgroundColor="#3B71CA"
+                                    TextColor="White"
+                                    CornerRadius="8"
+                                    Padding="15,0"/>
+                        </Grid>
                     </VerticalStackLayout>
                 </Border>
 
@@ -143,9 +173,7 @@
                 </Border>
               
                 <!-- Login Link -->
-                <StackLayout Orientation="Horizontal" 
-                         HorizontalOptions="Center"
-                         Spacing="5">
+                <HorizontalStackLayout HorizontalOptions="Center" Spacing="5">
                     <Label Text="Already have an account?" 
                        Style="{StaticResource SecondaryLabel}"/>
 
@@ -156,7 +184,7 @@
                             <TapGestureRecognizer Command="{Binding BackCommand}"/>
                         </Label.GestureRecognizers>
                     </Label>
-                </StackLayout>
+                </HorizontalStackLayout>
 
             </VerticalStackLayout>
         </ScrollView>

@@ -2,7 +2,7 @@ using System.Windows.Input;
 
 namespace GarageService.GarageApp.Views;
 
-public partial class TitleView : FlexLayout
+public partial class TitleView : Grid
 {
     public static readonly BindableProperty TitleProperty = BindableProperty.Create(
             nameof(Title),
@@ -20,24 +20,42 @@ public partial class TitleView : FlexLayout
         typeof(ICommand),
         typeof(TitleView));
 
+    private static readonly ICommand DefaultBackCommand = new Command(async () =>
+    {
+        if (Shell.Current?.Navigation != null && Shell.Current.Navigation.NavigationStack.Count > 1)
+        {
+            await Shell.Current.GoToAsync("..");
+        }
+    });
+
     public static readonly BindableProperty BackCommandProperty = BindableProperty.Create(
         nameof(BackCommand),
         typeof(ICommand),
-        typeof(TitleView));
+        typeof(TitleView),
+        defaultValue: null,
+        propertyChanged: OnBackCommandChanged);
+
     public TitleView()
     {
         InitializeComponent();
+    }
 
-        // Set default back command if none provided
+    private static void OnBackCommandChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        // If command is set to null, use default
+        if (newValue == null && bindable is TitleView view)
+        {
+            view.BackButton.Command = DefaultBackCommand;
+        }
+    }
+
+    protected override void OnParentSet()
+    {
+        base.OnParentSet();
+        // Set default back command if none bound
         if (BackCommand == null)
         {
-            BackCommand = new Command(async () =>
-            {
-                if (Shell.Current?.Navigation != null && Shell.Current.Navigation.NavigationStack.Count > 1)
-                {
-                    await Shell.Current.GoToAsync("..");
-                }
-            });
+            BackButton.Command = DefaultBackCommand;
         }
     }
 

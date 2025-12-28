@@ -1,171 +1,205 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<FlexLayout xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-            x:Class="GarageService.GarageApp.Views.DashBoardTitle"
-            x:Name="Root"
-            BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0F172A}"
-            JustifyContent="SpaceBetween"
-            AlignItems="Center"
-            Padding="20,12"
-            HeightRequest="135">
+<Grid xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+      xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+      x:Class="GarageService.GarageApp.Views.DashBoardTitle"
+      x:Name="Root"
+      ColumnDefinitions="Auto,*,Auto"
+      BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0F172A}"
+      Padding="20,16"
+      ColumnSpacing="16">
 
-    <!-- Left: Back Button with modern icon -->
-    <Border x:Name="ProfileBorder"
-            Stroke="{AppThemeBinding Light=#E0E0E0, Dark=#2D2D2D}"
+    <!-- Subtle gradient background -->
+    <Grid.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="{AppThemeBinding Light=#F8FAFC, Dark=#0F172A}" Offset="0"/>
+            <GradientStop Color="{AppThemeBinding Light=#EFF6FF, Dark=#1E293B}" Offset="1"/>
+        </LinearGradientBrush>
+    </Grid.Background>
+
+    <!-- Left: Profile Card -->
+    <Border Grid.Column="0"
+            x:Name="ProfileBorder"
+            Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
             StrokeThickness="1"
-            StrokeShape="RoundRectangle 12"
-            BackgroundColor="{AppThemeBinding Light=White, Dark=#252525}"
-            Padding="0"
-            HeightRequest="100"
-            WidthRequest="150"
-            >
+            StrokeShape="RoundRectangle 16"
+            BackgroundColor="{AppThemeBinding Light=White, Dark=#1E293B}"
+            Padding="16,12"
+            VerticalOptions="Center">
+        <Border.Shadow>
+            <Shadow Brush="{AppThemeBinding Light=#64748B, Dark=#000000}" 
+                    Offset="0,4" 
+                    Radius="12" 
+                    Opacity="0.1"/>
+        </Border.Shadow>
         <Border.GestureRecognizers>
             <TapGestureRecognizer Command="{Binding EditProfileCommand}"/>
         </Border.GestureRecognizers>
-        <VerticalStackLayout Spacing="16">
-            <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
-                <Image Source="profile_icon.png"
-                 WidthRequest="24"
-                 HeightRequest="24"
-                 Aspect="AspectFit"/>
-                <Label Text="Welcome" 
-                      FontAttributes="Bold" 
-                      FontSize="12"
-                      FontFamily="Medium"
-                      TextColor="{AppThemeBinding Light=#1E293B, Dark=White}"/>
-            </HorizontalStackLayout>
-
-            <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto" RowSpacing="6">
-                <!-- Name -->
-                <Label Grid.Row="0" Grid.Column="0"
-                       Text="👤"
-                       FontSize="10"
+        
+        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+            <!-- Avatar Circle -->
+            <Border Grid.Column="0"
+                    StrokeShape="RoundRectangle 20"
+                    Stroke="{AppThemeBinding Light=#3B82F6, Dark=#60A5FA}"
+                    StrokeThickness="2"
+                    BackgroundColor="{AppThemeBinding Light=#DBEAFE, Dark=#1E3A8A}"
+                    HeightRequest="40"
+                    WidthRequest="40"
+                    VerticalOptions="Center">
+                <Label Text="🏢"
+                       FontSize="18"
+                       HorizontalOptions="Center"
                        VerticalOptions="Center"/>
-                <Label Grid.Row="0" Grid.Column="1"
-                        FontSize="10"
-                        FontFamily="Regular"
-                        TextColor="{AppThemeBinding Light=#64748B, Dark=#A1A1AA}">
-                    <Label.FormattedText>
-                        <FormattedString>
-                            <Span Text="{Binding GarageProfile.GarageName}" FontAttributes="Bold"/>
-                        </FormattedString>
-                    </Label.FormattedText>
-                </Label>
-
-                <!-- Email -->
-                <Label Grid.Row="1" Grid.Column="0"
-                      Text="✉️"
-                      FontSize="10"
-                       VerticalOptions="Center"/>
-                <Label Grid.Row="1" Grid.Column="1"
-                       Text="{Binding GarageProfile.Email}"
-                       FontSize="10"
-                       FontFamily="Regular"
-                       TextColor="{AppThemeBinding Light=#64748B, Dark=#A1A1AA}"/>
-
-                <!-- Phone -->
-                <Label Grid.Row="2" Grid.Column="0"
-                      Text="📞"
-                      FontSize="10"
-                      VerticalOptions="Center"/>
-                <Label Grid.Row="2" Grid.Column="1"
-                       FontSize="10"
-                       FontFamily="Regular"
-                       TextColor="{AppThemeBinding Light=#64748B, Dark=#A1A1AA}">
-                    <Label.FormattedText>
-                        <FormattedString>
-                            <Span Text="{Binding GarageProfile.PhoneExt}" FontAttributes="Bold"/>
-                            <Span Text=" "/>
-                            <Span Text="{Binding GarageProfile.PhoneNumber}"/>
-                        </FormattedString>
-                    </Label.FormattedText>
-                </Label>
-            </Grid>
-        </VerticalStackLayout>
-
+            </Border>
+            
+            <!-- Profile Info -->
+            <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+                <Label Text="Welcome back"
+                       FontSize="11"
+                       TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}"/>
+                <Label Text="{Binding GarageProfile.GarageName}"
+                       FontSize="14"
+                       FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light=#1E293B, Dark=#F1F5F9}"
+                       LineBreakMode="TailTruncation"
+                       MaximumWidthRequest="120"/>
+                <HorizontalStackLayout Spacing="4">
+                    <Label Text="📧"
+                           FontSize="10"
+                           VerticalOptions="Center"/>
+                    <Label Text="{Binding GarageProfile.Email}"
+                           FontSize="10"
+                           TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}"
+                           LineBreakMode="TailTruncation"
+                           MaximumWidthRequest="100"/>
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+        </Grid>
     </Border>
 
-    <!-- Center: Title with subtle accent -->
-    <Border BackgroundColor="Transparent"
-            Padding="16,8"
-            HorizontalOptions="Center"
-            VerticalOptions="Center">
+    <!-- Center: Title -->
+    <VerticalStackLayout Grid.Column="1" 
+                         HorizontalOptions="Center" 
+                         VerticalOptions="Center"
+                         Spacing="4">
         <Label x:Name="TitleLabel"
                Text="{Binding Title, Source={x:Reference Root}}"
-               FontSize="20"
+               FontSize="24"
                FontAttributes="Bold"
                TextColor="{AppThemeBinding Light=#1E293B, Dark=#F1F5F9}"
-               HorizontalOptions="Center"
-               VerticalOptions="Center"/>
-    </Border>
+               HorizontalOptions="Center"/>
+        <BoxView HeightRequest="3"
+                 WidthRequest="60"
+                 CornerRadius="2"
+                 BackgroundColor="{AppThemeBinding Light=#3B82F6, Dark=#60A5FA}"
+                 HorizontalOptions="Center"/>
+    </VerticalStackLayout>
 
-    <!-- Right: Premium info + Save -->
-    <HorizontalStackLayout HorizontalOptions="End" Spacing="16" VerticalOptions="Center">
+    <!-- Right: Premium + Logout -->
+    <HorizontalStackLayout Grid.Column="2" 
+                           Spacing="12" 
+                           VerticalOptions="Center">
 
-        <!-- Premium Badge with gradient and shadow -->
+        <!-- Premium Badge -->
         <Border x:Name="PremiumBorder"
-                Stroke="{AppThemeBinding Light=#F59E0B, Dark=#FCD34D}"
+                Stroke="{AppThemeBinding Light=#F59E0B, Dark=#FBBF24}"
                 StrokeThickness="1.5"
-                BackgroundColor="Transparent"
-                Padding="0"
+                StrokeShape="RoundRectangle 12"
+                Padding="12,8"
                 IsVisible="False"
-                HeightRequest="60"
-                WidthRequest="150"
-                StrokeShape="RoundRectangle 16">
-
-            <!-- Gradient Background -->
+                VerticalOptions="Center">
             <Border.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                     <GradientStop Color="{AppThemeBinding Light=#FFFBEB, Dark=#451A03}" Offset="0"/>
                     <GradientStop Color="{AppThemeBinding Light=#FEF3C7, Dark=#78350F}" Offset="1"/>
                 </LinearGradientBrush>
             </Border.Background>
-
+            <Border.Shadow>
+                <Shadow Brush="#F59E0B" 
+                        Offset="0,2" 
+                        Radius="8" 
+                        Opacity="0.2"/>
+            </Border.Shadow>
             <Border.GestureRecognizers>
                 <TapGestureRecognizer Command="{Binding PremuimCommand, Source={x:Reference Root}}"/>
             </Border.GestureRecognizers>
-
-            <HorizontalStackLayout Spacing="6" 
-                                 HorizontalOptions="Center" 
-                                 VerticalOptions="Center"
-                                 Padding="12,6">
-
-                <!-- Premium Icon -->
+            
+            <HorizontalStackLayout Spacing="8">
                 <Label Text="⭐"
-                       FontSize="10"
+                       FontSize="16"
                        VerticalOptions="Center"/>
-
                 <VerticalStackLayout Spacing="0">
-                    <Label Text="PREMIUM" 
-                           FontAttributes="Bold" 
-                           FontSize="12" 
-                           TextColor="#D97706"
-                           HorizontalOptions="Center"/>
-                    <Label Text="{Binding GaragePremiumRegistration.ExpiryDate, Source={x:Reference Root}, StringFormat='{0:MMM dd yyyy}'}"
+                    <Label Text="PREMIUM"
                            FontSize="11"
-                           TextColor="#059669"
-                           HorizontalOptions="Center"/>
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light=#B45309, Dark=#FBBF24}"/>
+                    <Label Text="{Binding GaragePremiumRegistration.ExpiryDate, Source={x:Reference Root}, StringFormat='Expires {0:MMM dd}'}"
+                           FontSize="9"
+                           TextColor="{AppThemeBinding Light=#059669, Dark=#34D399}"/>
                 </VerticalStackLayout>
             </HorizontalStackLayout>
 
             <Border.Triggers>
-                <DataTrigger TargetType="Border" Binding="{Binding IsPremium, Source={x:Reference Root}}" Value="True">
+                <DataTrigger TargetType="Border" 
+                             Binding="{Binding IsPremium, Source={x:Reference Root}}" 
+                             Value="True">
                     <Setter Property="IsVisible" Value="True"/>
                 </DataTrigger>
             </Border.Triggers>
         </Border>
 
-        <!-- Save Button with modern power icon -->
-        <Button x:Name="SaveButton"
-                Text="⏻"
-                BackgroundColor="Transparent"
-                TextColor="{AppThemeBinding Light=#059669, Dark=#34D399}"
-                FontSize="16"
-                HorizontalOptions="Center"
-                VerticalOptions="Center"
-                WidthRequest="50"
-                HeightRequest="50"
-                CornerRadius="22"
-                Command="{Binding SaveCommand, Source={x:Reference Root}}"/>
+        <!-- Upgrade Button (shown when not premium) -->
+        <Border x:Name="UpgradeBorder"
+                StrokeShape="RoundRectangle 12"
+                Stroke="{AppThemeBinding Light=#3B82F6, Dark=#60A5FA}"
+                StrokeThickness="1.5"
+                BackgroundColor="{AppThemeBinding Light=#EFF6FF, Dark=#1E3A8A}"
+                Padding="12,8"
+                IsVisible="True"
+                VerticalOptions="Center">
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding PremuimCommand, Source={x:Reference Root}}"/>
+            </Border.GestureRecognizers>
+            <HorizontalStackLayout Spacing="6">
+                <Label Text="🚀"
+                       FontSize="14"
+                       VerticalOptions="Center"/>
+                <Label Text="Upgrade"
+                       FontSize="12"
+                       FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light=#2563EB, Dark=#60A5FA}"
+                       VerticalOptions="Center"/>
+            </HorizontalStackLayout>
+            
+            <Border.Triggers>
+                <DataTrigger TargetType="Border" 
+                             Binding="{Binding IsPremium, Source={x:Reference Root}}" 
+                             Value="True">
+                    <Setter Property="IsVisible" Value="False"/>
+                </DataTrigger>
+            </Border.Triggers>
+        </Border>
+
+        <!-- Logout Button -->
+        <Border StrokeShape="RoundRectangle 12"
+                Stroke="Transparent"
+                BackgroundColor="{AppThemeBinding Light=#FEE2E2, Dark=#7F1D1D}"
+                HeightRequest="44"
+                WidthRequest="44"
+                VerticalOptions="Center">
+            <Border.Shadow>
+                <Shadow Brush="{AppThemeBinding Light=#EF4444, Dark=#000000}" 
+                        Offset="0,2" 
+                        Radius="6" 
+                        Opacity="0.15"/>
+            </Border.Shadow>
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding SaveCommand, Source={x:Reference Root}}"/>
+            </Border.GestureRecognizers>
+            <Label Text="⏻"
+                   FontSize="18"
+                   TextColor="{AppThemeBinding Light=#DC2626, Dark=#FCA5A5}"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"/>
+        </Border>
     </HorizontalStackLayout>
-</FlexLayout>
+</Grid>

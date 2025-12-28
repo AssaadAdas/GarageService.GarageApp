@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="GarageService.GarageApp.Views.EditPaymentMethodsPage"
              xmlns:views="clr-namespace:GarageService.GarageApp.Views"
+             xmlns:inputs="clr-namespace:Syncfusion.Maui.Inputs;assembly=Syncfusion.Maui.Inputs"
              >
     <Grid RowDefinitions="Auto,*">
         <views:TitleView Title="Edit Payment method"
@@ -60,23 +61,27 @@
 
                             <!-- Expiry Month -->
                             <VerticalStackLayout Grid.Column="0" Spacing="8">
-                                <Picker 
+                                <inputs:SfComboBox 
                                      ItemsSource="{Binding Months}"
                                      SelectedItem="{Binding ExpiryMonth}"
-                                     Style="{StaticResource ModernPicker}"/>
+                                     Placeholder="Month"
+                                     IsFilteringEnabled="True"
+                                     IsEditable="True"/>
                             </VerticalStackLayout>
 
                             <!-- Expiry Year -->
                             <VerticalStackLayout Grid.Column="1" Spacing="8">
-                                <Picker 
+                                <inputs:SfComboBox 
                                      ItemsSource="{Binding Years}"
                                      SelectedItem="{Binding ExpiryYear}"
-                                     Style="{StaticResource ModernPicker}"/>
+                                     Placeholder="Year"
+                                     IsFilteringEnabled="True"
+                                     IsEditable="True"/>
                             </VerticalStackLayout>
 
                             <!-- CVV -->
                             <VerticalStackLayout Grid.Column="2" Spacing="8">
-                                <Entry Placeholder="123" 
+                                <Entry Placeholder="CVV" 
                                     Text="{Binding Cvv}"
                                     Style="{StaticResource ModernEntry}"
                                     Keyboard="Numeric"

@@ -8,10 +8,13 @@
         <VerticalStackLayout Spacing="24" Padding="20">
 
             <!-- Header Section -->
-            <Frame BackgroundColor="{AppThemeBinding Light=#3498DB, Dark=#2980B9}"
+            <Border BackgroundColor="{AppThemeBinding Light=#3498DB, Dark=#2980B9}"
                    Padding="20"
-                   CornerRadius="16"
-                   HasShadow="True">
+                   StrokeShape="RoundRectangle 16"
+                   Stroke="Transparent">
+                <Border.Shadow>
+                    <Shadow Brush="Black" Offset="0,2" Radius="8" Opacity="0.15"/>
+                </Border.Shadow>
                 <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
                     <Label Text="Payment Details"
                            FontSize="24"
@@ -24,13 +27,16 @@
                            Opacity="0.9"
                            HorizontalTextAlignment="Center"/>
                 </VerticalStackLayout>
-            </Frame>
+            </Border>
 
             <!-- Payment Information Card -->
-            <Frame BackgroundColor="{AppThemeBinding Light=White, Dark=#2C3E50}"
+            <Border BackgroundColor="{AppThemeBinding Light=White, Dark=#2C3E50}"
                    Padding="20"
-                   CornerRadius="12"
-                   HasShadow="True">
+                   StrokeShape="RoundRectangle 12"
+                   Stroke="Transparent">
+                <Border.Shadow>
+                    <Shadow Brush="Black" Offset="0,2" Radius="6" Opacity="0.1"/>
+                </Border.Shadow>
                 <VerticalStackLayout Spacing="16">
 
                     <!-- Order Number -->
@@ -97,7 +103,7 @@
                     </HorizontalStackLayout>
 
                 </VerticalStackLayout>
-            </Frame>
+            </Border>
 
             <!-- Pay Button -->
             <Button Text="Pay Now" 

@@ -142,7 +142,8 @@
                         <!-- Service Types List -->
                         <CollectionView ItemsSource="{Binding VehiclesService.VehiclesServiceTypes}"
                                    SelectionMode="None"
-                                        EmptyView="No Service Found">
+                                   EmptyView="No Service Found"
+                                   ItemsUpdatingScrollMode="KeepScrollOffset">
                             <CollectionView.ItemTemplate>
                                 <DataTemplate>
                                     <Frame Padding="20"

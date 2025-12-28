@@ -1,4 +1,4 @@
-﻿using GarageService.GarageApp.Views;
+using GarageService.GarageApp.Views;
 
 namespace GarageService.GarageApp
 {

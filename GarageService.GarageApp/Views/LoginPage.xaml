@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:GarageService.GarageApp.ViewModels"
              x:Class="GarageService.GarageApp.Views.LoginPage"
+             x:DataType="viewmodels:LoginViewModel"
              BackgroundImageSource="garage_bg.png"
              Title="LoginPage">
     <ScrollView>
         <VerticalStackLayout Padding="30,40" Spacing="25">
             <!-- Header Section -->
-            <StackLayout Spacing="10" HorizontalOptions="Center">
+            <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
                 <Image Source="garageservicelogo.png" 
                     HeightRequest="120"
                     WidthRequest="120"
+                    Aspect="AspectFit"
                     HorizontalOptions="Center"/>
 
                 <Label Text="Welcome" 
@@ -23,14 +26,16 @@
                     FontSize="14"
                     HorizontalOptions="Center"
                     TextColor="Black"/>
-            </StackLayout>
+            </VerticalStackLayout>
 
-            <!-- Login Form -->
-            <Frame CornerRadius="12" 
-                BorderColor="#E0E0E0" 
-                BackgroundColor="White"
-                Padding="25"
-                HasShadow="True">
+            <!-- Login Form - Using Border instead of Frame for better performance -->
+            <Border StrokeShape="RoundRectangle 12"
+                    Stroke="#E0E0E0"
+                    BackgroundColor="White"
+                    Padding="25">
+                <Border.Shadow>
+                    <Shadow Brush="Black" Offset="0,2" Radius="8" Opacity="0.15"/>
+                </Border.Shadow>
                 <VerticalStackLayout Spacing="20">
                     <!-- Username Field -->
                     <VerticalStackLayout Spacing="5">
@@ -57,16 +62,14 @@
                             HeightRequest="50"/>
                     </VerticalStackLayout>
 
-                    <!-- Remember Me & Forgot Password -->
-                    <Grid ColumnDefinitions="*,*" RowDefinitions="auto">
-                        <HorizontalStackLayout Spacing="10" Grid.Column="0">
-                            <CheckBox IsChecked="{Binding RememberMe}" 
-                                  Color="#3498DB"/>
-                            <Label Text="Remember me" 
-                                VerticalOptions="Center"
-                                TextColor="#34495E"/>
-                        </HorizontalStackLayout>
-                    </Grid>
+                    <!-- Remember Me -->
+                    <HorizontalStackLayout Spacing="10">
+                        <CheckBox IsChecked="{Binding RememberMe}" 
+                              Color="#3498DB"/>
+                        <Label Text="Remember me" 
+                            VerticalOptions="Center"
+                            TextColor="#34495E"/>
+                    </HorizontalStackLayout>
 
                     <!-- Login Button -->
                     <Button Text="Sign In" 
@@ -78,13 +81,10 @@
                          HeightRequest="50"
                          CornerRadius="25"/>
                 </VerticalStackLayout>
-            </Frame>
+            </Border>
 
             <!-- Divider -->
-            <StackLayout Orientation="Horizontal" 
-                      VerticalOptions="Center" 
-                      Spacing="10"
-                      Padding="0,10">
+            <HorizontalStackLayout VerticalOptions="Center" Spacing="10" Padding="0,10">
                 <BoxView Color="#E0E0E0" 
                       HeightRequest="1" 
                       VerticalOptions="Center"
@@ -96,7 +96,7 @@
                       HeightRequest="1" 
                       VerticalOptions="Center"
                       HorizontalOptions="FillAndExpand"/>
-            </StackLayout>
+            </HorizontalStackLayout>
 
             <!-- Register Section -->
             <HorizontalStackLayout HorizontalOptions="Center" Spacing="5">

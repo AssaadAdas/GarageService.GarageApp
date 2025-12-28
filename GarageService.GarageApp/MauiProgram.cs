@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Maui;
+using CommunityToolkit.Maui;
 using GarageService.GarageApp.Services;
 using GarageService.GarageApp.ViewModels;
 using GarageService.GarageApp.Views;
